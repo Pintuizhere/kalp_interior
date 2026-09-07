@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap');
+@import url('https://fonts.cdnfonts.com/css/brittany-signature');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+    /* Colors */
+    --primary-color: #334C40; /* Dark Slate Green */
+    --accent-color: #EAB136; /* Mustard Yellow */
+    --text-dark: #1E2723;
+    --text-light: #F8F5EC;
+    --text-muted: #66756C;
+    --bg-light: #F6F6F6;
+    --bg-white: #FFFFFF;
+    
+    /* Typography */
+    --font-primary: 'Inter', sans-serif;
+    --font-secondary: 'Poppins', sans-serif;
+    --font-league-spartan: 'League Spartan', sans-serif;
+    --font-headline: var(--font-league-spartan);
+    --font-accent: 'Brittany Signature', cursive;
+    
+    /* Spacing */
+    --section-padding: 80px 0;
+    --container-padding: 0 15px;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 20px;
+    --radius-lg: 40px;
+    --radius-xl: 80px;
+
+    /* Transitions */
+    --transition: all 0.3s ease;
+}
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-primary);
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .section-title {
+    font-family: var(--font-headline);
+    text-transform: uppercase;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Utilities */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--container-padding);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.accent-text {
+    font-family: var(--font-accent);
+    color: var(--accent-color);
+    font-style: normal; /* Script fonts shouldn't be forced italic usually */
+    font-weight: 500;
+    text-transform: none !important; /* Prevents inheriting ALL CAPS from h2 */
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent-color);
+    color: var(--text-dark);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    font-size: 15px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: -1;
+    border-radius: 30px;
+}
+
+.btn:hover {
+    color: var(--text-light);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(51, 76, 64, 0.25);
+}
+
+.btn:hover::before {
+    width: 100%;
+}
+
+.btn-icon {
+    background: var(--text-dark);
+    color: var(--text-light);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.btn:hover .btn-icon {
+    background: var(--accent-color);
+    color: var(--text-dark);
+    transform: translateX(4px);
+}
+
+.btn-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.section-subtitle {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.section-subtitle::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background-color: var(--accent-color);
+}
+
+/* Navbar Book a Call Button Animation */
+.nav-book-call-btn:hover .nav-btn-arrow {
+    transform: rotate(0deg) translateX(3px) !important;
+}
+
