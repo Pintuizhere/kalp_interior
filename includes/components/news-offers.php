@@ -13,22 +13,41 @@
         </div>
 
         <div class="news-tabs-wrapper" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px;">
+            <?php
+            if (!isset($conn)) {
+                require_once __DIR__ . '/../../admin/config/db.php';
+            }
+            $active_cats_query = "SELECT DISTINCT category FROM news_offers WHERE status = 'Published'";
+            $active_cats_result = $conn->query($active_cats_query);
+            $active_categories = [];
+            if ($active_cats_result && $active_cats_result->num_rows > 0) {
+                while($row = $active_cats_result->fetch_assoc()) {
+                    $active_categories[] = strtolower($row['category']);
+                }
+            }
+            ?>
             <div class="news-tabs" style="display: flex; gap: 15px;">
                 <button class="news-tab active" data-target="all">
                     ALL
                 </button>
+                <?php if (in_array('offers', $active_categories)): ?>
                 <button class="news-tab" data-target="offers">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                     OFFERS
                 </button>
+                <?php endif; ?>
+                <?php if (in_array('news', $active_categories)): ?>
                 <button class="news-tab" data-target="news">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     NEWS
                 </button>
+                <?php endif; ?>
+                <?php if (in_array('notifications', $active_categories)): ?>
                 <button class="news-tab" data-target="notifications">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                     NOTIFICATIONS
                 </button>
+                <?php endif; ?>
             </div>
             <a href="news-offers.php" class="view-all-link" style="color: var(--text-dark); font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; position: relative; z-index: 50; cursor: pointer;">
                 View All <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>

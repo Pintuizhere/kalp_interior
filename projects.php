@@ -2,7 +2,17 @@
 require_once 'admin/config/db.php';
 $currentPage = 'projects';
 
-// Fetch Categories
+// Fetch Active Categories from projects
+$active_cat_query = "SELECT DISTINCT category FROM projects WHERE status != 'Archived'";
+$active_cats_res = $conn->query($active_cat_query);
+$active_cats = [];
+if($active_cats_res && $active_cats_res->num_rows > 0) {
+    while($row = $active_cats_res->fetch_assoc()) {
+        $active_cats[] = strtolower(trim($row['category']));
+    }
+}
+
+// Fetch All Categories
 $cat_query = "SELECT * FROM categories ORDER BY order_index ASC, name ASC";
 $categories = $conn->query($cat_query);
 
@@ -110,10 +120,12 @@ include 'includes/header.php';
                     <span class="filter-tag active" style="background-color: #fcebdc; color: var(--text-dark); border: none; padding: 12px 25px;"><i class="fa-solid fa-border-all" style="margin-right: 8px;"></i> All</span>
                     <?php if($categories && $categories->num_rows > 0): ?>
                         <?php while($cat = $categories->fetch_assoc()): ?>
+                            <?php if (in_array(strtolower(trim($cat['name'])), $active_cats)): ?>
                             <span class="filter-tag" style="background-color: white; border: 1px solid rgba(0,0,0,0.05); padding: 12px 25px; border-radius: 25px;">
                                 <?php if(!empty($cat['icon'])): ?><i class="<?php echo htmlspecialchars($cat['icon']); ?>" style="margin-right: 8px;"></i><?php endif; ?>
                                 <?php echo htmlspecialchars($cat['name']); ?>
                             </span>
+                            <?php endif; ?>
                         <?php endwhile; ?>
                     <?php endif; ?>
                 </div>

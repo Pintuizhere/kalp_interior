@@ -4,6 +4,17 @@ $pageTitle = "Interior Design Blog & Tips | Kalp Interior Design Studio";
 $pageDescription = "Read the latest interior design trends, tips, and inspiration from Kalp Interior Design Studio's experts in Ranchi to elevate your home and office.";
 include 'includes/header.php'; 
 require_once 'admin/config/db.php';
+
+// Fetch Active Blog Categories
+$active_blog_cat_query = "SELECT DISTINCT category FROM blogs WHERE status = 'Published' AND category IS NOT NULL AND category != ''";
+$active_blog_cats_res = $conn->query($active_blog_cat_query);
+$active_blog_cats = [];
+if($active_blog_cats_res && $active_blog_cats_res->num_rows > 0) {
+    while($row = $active_blog_cats_res->fetch_assoc()) {
+        $active_blog_cats[] = trim($row['category']);
+    }
+}
+sort($active_blog_cats);
 ?>
 
 <main>
@@ -79,12 +90,9 @@ require_once 'admin/config/db.php';
                 <div class="blog-filter-wrapper">
                     <div class="filter-tags blog-filter-container" id="blog-category-filters">
                         <span class="filter-tag active" style="background-color: var(--accent-color); color: var(--text-dark); border: none; padding: 10px 20px; border-radius: 25px; font-weight: 500; font-size: 14px; display: inline-flex; align-items: center; cursor: pointer; transition: all 0.3s ease;"><i class="fa-solid fa-border-all" style="margin-right: 8px;"></i> All Posts</span>
-                        <span class="filter-tag" style="background-color: white; border: 1px solid rgba(0,0,0,0.05); padding: 10px 20px; border-radius: 25px; font-weight: 500; font-size: 14px; color: var(--text-dark); cursor: pointer; transition: all 0.3s ease;">Design Tips</span>
-                        <span class="filter-tag" style="background-color: white; border: 1px solid rgba(0,0,0,0.05); padding: 10px 20px; border-radius: 25px; font-weight: 500; font-size: 14px; color: var(--text-dark); cursor: pointer; transition: all 0.3s ease;">Trends</span>
-                        <span class="filter-tag" style="background-color: white; border: 1px solid rgba(0,0,0,0.05); padding: 10px 20px; border-radius: 25px; font-weight: 500; font-size: 14px; color: var(--text-dark); cursor: pointer; transition: all 0.3s ease;">Ideas & Inspiration</span>
-                        <span class="filter-tag" style="background-color: white; border: 1px solid rgba(0,0,0,0.05); padding: 10px 20px; border-radius: 25px; font-weight: 500; font-size: 14px; color: var(--text-dark); cursor: pointer; transition: all 0.3s ease;">News</span>
-                        <span class="filter-tag" style="background-color: white; border: 1px solid rgba(0,0,0,0.05); padding: 10px 20px; border-radius: 25px; font-weight: 500; font-size: 14px; color: var(--text-dark); cursor: pointer; transition: all 0.3s ease;">Projects</span>
-                        <span class="filter-tag" style="background-color: white; border: 1px solid rgba(0,0,0,0.05); padding: 10px 20px; border-radius: 25px; font-weight: 500; font-size: 14px; color: var(--text-dark); cursor: pointer; transition: all 0.3s ease;">Lifestyle</span>
+                        <?php foreach($active_blog_cats as $cat): ?>
+                        <span class="filter-tag" style="background-color: white; border: 1px solid rgba(0,0,0,0.05); padding: 10px 20px; border-radius: 25px; font-weight: 500; font-size: 14px; color: var(--text-dark); cursor: pointer; transition: all 0.3s ease;"><?php echo htmlspecialchars($cat); ?></span>
+                        <?php endforeach; ?>
                     </div>
                     <div class="mobile-scroll-indicator-blog" id="blog-scroll-indicator">
                         <i class="fa-solid fa-chevron-right" style="animation: pulse-horizontal-blog 1.5s infinite;"></i>
