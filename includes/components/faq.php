@@ -9,11 +9,11 @@
             <div class="faq-accordion">
                 <div class="faq-item">
                     <div class="faq-header">
-                        <h4 class="faq-title">What services does Kalp Interior Design Studio offer?</h4>
+                        <h4 class="faq-title">Why choose Kalp as the best interior designer in Ranchi?</h4>
                         <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
                     </div>
                     <div class="faq-body">
-                        <p>At Kalp Interior Design Studio, we offer end-to-end interior design services for residential and commercial spaces. Our expertise covers space planning, 3D visualization, material selection, custom furniture design, and complete project execution to bring your vision to life.</p>
+                        <p>As the <strong>best interior designer in Ranchi</strong>, Kalp Interior Design Studio offers end-to-end services for residential and commercial spaces. Whether you're looking for an <strong>interior designer in Ranchi</strong> for space planning, 3D visualization, or custom furniture, our team of expert <strong>interior designers in Ranchi</strong> handles complete project execution to bring your vision to life.</p>
                     </div>
                 </div>
                 
