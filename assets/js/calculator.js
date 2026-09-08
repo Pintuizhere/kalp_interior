@@ -590,8 +590,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     const formatNum = (num) => '₹' + Math.round(num).toLocaleString('en-IN');
 
                     checkedAccs.forEach(acc => {
-                        const ratePerFt = parseFloat(acc.value);
-                        const cost = ratePerFt * totalFt; // Calculate based on rft!
+                        const val = parseFloat(acc.value);
+                        const valType = acc.getAttribute('data-type') || 'sqft';
+                        const cost = (valType === 'fixed') ? val : (val * totalFt); // Calculate based on rft or fixed
                         addonsCost += cost;
                         accList.innerHTML += `
                             <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
@@ -620,10 +621,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         </li>`;
                     }
 
-                    ['8', '10', '4'].forEach(val => {
-                        const li = document.getElementById(`li-addon-${val}`);
-                        if (li) li.style.display = 'none';
-                    });
+                    const allAddonLis = document.querySelectorAll('[id^="li-addon-"]');
+                    allAddonLis.forEach(li => li.style.display = 'none');
 
                     document.getElementById('calc-total-range').innerText = formatNum(totalCost);
                     document.getElementById('bd-total').innerText = formatNum(totalCost);
@@ -717,21 +716,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 let addonsCost = 0;
 
                 // Reset all addon list items to hidden
-                ['8', '10', '4'].forEach(val => {
-                    const li = document.getElementById(`li-addon-${val}`);
-                    if (li) li.style.display = 'none';
-                });
+                const allAddonLis = document.querySelectorAll('[id^="li-addon-"]');
+                allAddonLis.forEach(li => li.style.display = 'none');
 
                 const checkedAddons = document.querySelectorAll('input[name="addons"]:checked');
                 if (checkedAddons) {
                     checkedAddons.forEach(addon => {
-                        const val = parseInt(addon.value || 0);
-                        const cost = baseCost * (val / 100);
+                        const val = parseFloat(addon.value || 0);
+                        const id = addon.getAttribute('data-id');
+                        const valType = addon.getAttribute('data-type') || 'percent';
+                        
+                        let cost = 0;
+                        if (valType === 'percent') {
+                            cost = baseCost * (val / 100); // Percentage
+                        } else {
+                            cost = val; // Fixed INR value
+                        }
+                        
                         addonsCost += cost;
 
                         // Show in breakdown
-                        const li = document.getElementById(`li-addon-${val}`);
-                        const span = document.getElementById(`bd-addon-${val}`);
+                        const li = document.getElementById(`li-addon-${id}`);
+                        const span = document.getElementById(`bd-addon-${id}`);
                         if (li && span) {
                             li.style.display = 'flex'; // because breakdown list items are typically flex
                             span.innerText = `₹${cost.toLocaleString('en-IN')}`;

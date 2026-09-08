@@ -6,6 +6,15 @@ $comp_categories = $conn->query($comp_cat_query);
 // Fetch Projects (Limit 6 for home page)
 $comp_proj_query = "SELECT * FROM projects WHERE status != 'Archived' ORDER BY created_at DESC LIMIT 6";
 $comp_projects = $conn->query($comp_proj_query);
+
+// Fetch Active Categories that have projects
+$active_comp_categories = [];
+$cat_check = $conn->query("SELECT DISTINCT category FROM projects WHERE status != 'Archived' AND category IS NOT NULL AND category != ''");
+if ($cat_check && $cat_check->num_rows > 0) {
+    while($row = $cat_check->fetch_assoc()) {
+        $active_comp_categories[] = strtolower(trim($row['category']));
+    }
+}
 ?>
 <!-- Projects Section -->
 <style>
@@ -87,6 +96,7 @@ $comp_projects = $conn->query($comp_proj_query);
                     <?php 
                     $comp_categories->data_seek(0);
                     while($cat = $comp_categories->fetch_assoc()): 
+                        if(!in_array(strtolower(trim($cat['name'])), $active_comp_categories)) continue;
                     ?>
                         <span class="filter-tag" style="background-color: white; border: 1px solid rgba(0,0,0,0.05); padding: 12px 25px; border-radius: 25px;">
                             <?php if(!empty($cat['icon'])): ?><i class="<?php echo htmlspecialchars($cat['icon']); ?>" style="margin-right: 8px;"></i><?php endif; ?>

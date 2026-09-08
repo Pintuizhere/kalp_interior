@@ -113,11 +113,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $category_slug = $conn->real_escape_string($_POST['category_slug'] ?? 'residential');
         $name = $conn->real_escape_string($_POST['name']);
         $percent = (float)$_POST['percent_value'];
+        $val_type = $conn->real_escape_string($_POST['addon_val_type'] ?? 'percent');
         
         if ($id > 0) {
-            $conn->query("UPDATE calc_addons SET category_slug='$category_slug', name='$name', percent_value=$percent WHERE id=$id");
+            $conn->query("UPDATE calc_addons SET category_slug='$category_slug', name='$name', percent_value=$percent, value_type='$val_type' WHERE id=$id");
         } else {
-            $conn->query("INSERT INTO calc_addons (category_slug, name, percent_value) VALUES ('$category_slug', '$name', $percent)");
+            $conn->query("INSERT INTO calc_addons (category_slug, name, percent_value, value_type) VALUES ('$category_slug', '$name', $percent, '$val_type')");
         }
         $success_msg = "Add-on saved!";
     }
@@ -493,7 +494,15 @@ include 'includes/sidebar.php';
                         <input type="hidden" name="id" id="addon_id" value="0">
                         <div class="form-group">
                             <label class="form-label">Category</label>
-                            <select name="category_slug" id="addon_cat" class="form-control" required>
+                            <select name="category_slug" id="addon_cat" class="form-control" required onchange="
+                                if(this.value === 'modular-kitchen') {
+                                    document.querySelector('input[name=\'addon_val_type\'][value=\'sqft\']').checked = true;
+                                    document.getElementById('addon_pct').placeholder = 'e.g. 1200 for ₹1200/sqft';
+                                } else if(document.querySelector('input[name=\'addon_val_type\']:checked').value === 'sqft') {
+                                    document.querySelector('input[name=\'addon_val_type\'][value=\'percent\']').checked = true;
+                                    document.getElementById('addon_pct').placeholder = 'e.g. 10 for 10%';
+                                }
+                            ">
                                 <?php 
                                 if (isset($categories) && $categories->num_rows > 0) {
                                     mysqli_data_seek($categories, 0);
@@ -508,8 +517,22 @@ include 'includes/sidebar.php';
                             <input type="text" name="name" id="addon_name" required class="form-control">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Value (% or ₹/sq ft)</label>
-                            <input type="number" step="0.01" name="percent_value" id="addon_pct" required class="form-control">
+                            <label class="form-label">Value Type</label>
+                            <div style="display: flex; gap: 15px; margin-bottom: 10px; padding: 10px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 5px;">
+                                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 13px;">
+                                    <input type="radio" name="addon_val_type" value="percent" checked onchange="document.getElementById('addon_pct').placeholder='e.g. 10 for 10%';"> Percentage (%)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 13px;">
+                                    <input type="radio" name="addon_val_type" value="sqft" onchange="document.getElementById('addon_pct').placeholder='e.g. 1200 for ₹1200/sqft';"> Per SqFt (₹/sq ft)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 13px;">
+                                    <input type="radio" name="addon_val_type" value="fixed" onchange="document.getElementById('addon_pct').placeholder='e.g. 50000 for ₹50,000';"> Normal Value (₹)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Enter Value</label>
+                            <input type="number" step="0.01" name="percent_value" id="addon_pct" required class="form-control" placeholder="e.g. 10 for 10%">
                         </div>
                         <button type="submit" class="btn-primary">Save Add-on</button>
                         <button type="button" class="btn-primary" style="background:#ccc; color:#333; margin-left:10px;" onclick="resetForm('addon')">Reset</button>
@@ -525,8 +548,10 @@ include 'includes/sidebar.php';
                                 <td><strong><?php echo $row['name']; ?></strong></td>
                                 <td>
                                     <?php 
-                                    if (($row['category_slug'] ?? '') == 'modular-kitchen') {
+                                    if (($row['value_type'] ?? '') == 'sqft') {
                                         echo '₹' . $row['percent_value'] . '/sq ft';
+                                    } elseif (($row['value_type'] ?? '') == 'fixed') {
+                                        echo '₹' . $row['percent_value'];
                                     } else {
                                         echo '+' . $row['percent_value'] . '%';
                                     }
@@ -534,7 +559,7 @@ include 'includes/sidebar.php';
                                 </td>
                                 <td>
                                     <div class="action-btns">
-                                        <a href="javascript:void(0)" class="btn-icon" onclick="editAddon(<?php echo $row['id']; ?>, '<?php echo addslashes($row['category_slug'] ?? 'residential'); ?>', '<?php echo addslashes($row['name']); ?>', <?php echo $row['percent_value']; ?>)"><i class="fa-solid fa-pen"></i></a>
+                                        <a href="javascript:void(0)" class="btn-icon" onclick="editAddon(<?php echo $row['id']; ?>, '<?php echo addslashes($row['category_slug'] ?? 'residential'); ?>', '<?php echo addslashes($row['name']); ?>', <?php echo $row['percent_value']; ?>, '<?php echo $row['value_type'] ?? 'percent'; ?>')"><i class="fa-solid fa-pen"></i></a>
                                         <a href="?delete=calc_addons&id=<?php echo $row['id']; ?>" class="btn-icon delete" onclick="return confirm('Delete?');"><i class="fa-solid fa-trash"></i></a>
                                     </div>
                                 </td>
@@ -876,11 +901,20 @@ function editPackage(id, cat, name, price, pdf) {
     document.getElementById('pkg_price').value = price;
     document.getElementById('pkg_pdf').value = pdf;
 }
-function editAddon(id, cat, name, pct) {
+function editAddon(id, cat, name, pct, valType) {
     document.getElementById('addon_id').value = id;
     document.getElementById('addon_cat').value = cat;
     document.getElementById('addon_name').value = name;
     document.getElementById('addon_pct').value = pct;
+    valType = valType || 'percent';
+    // Let the true valType from DB drive the UI
+    const radio = document.querySelector(`input[name="addon_val_type"][value="${valType}"]`);
+    if (radio) {
+        radio.checked = true;
+        if (valType === 'percent') document.getElementById('addon_pct').placeholder = 'e.g. 10 for 10%';
+        if (valType === 'sqft') document.getElementById('addon_pct').placeholder = 'e.g. 1200 for ₹1200/sqft';
+        if (valType === 'fixed') document.getElementById('addon_pct').placeholder = 'e.g. 50000 for ₹50,000';
+    }
 }
 function editBreakdown(id, cat, name, pct, pos) {
     document.getElementById('bd_id').value = id;

@@ -265,7 +265,7 @@ while($row = $calc_breakdowns->fetch_assoc()){ $calc_breakdowns_data[$row['categ
                                     $cat_slug = $addon['category_slug'] ?? 'residential';
                                 ?>
                                 <label class="calc-checkbox addon-card" data-category="<?php echo $cat_slug; ?>" style="<?php echo $cat_slug == 'commercial' ? 'display:none;' : ''; ?>">
-                                    <input type="checkbox" name="addons" value="<?php echo $addon['percent_value']; ?>">
+                                    <input type="checkbox" name="addons" value="<?php echo $addon['percent_value']; ?>" data-id="<?php echo $addon['id']; ?>" data-type="<?php echo $addon['value_type'] ?? 'percent'; ?>">
                                     <span class="chk-box"><i class="fa-solid fa-check"></i></span> <?php echo htmlspecialchars($addon['name']); ?>
                                 </label>
                                 <?php endforeach; ?>
@@ -478,7 +478,7 @@ while($row = $calc_breakdowns->fetch_assoc()){ $calc_breakdowns_data[$row['categ
                                 if ($addon['category_slug'] === 'modular-kitchen'):
                             ?>
                             <label class="calc-checkbox-card" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: flex-start; cursor: pointer; transition: 0.3s;">
-                                <input type="checkbox" name="k_accessories" value="<?php echo floatval($addon['percent_value']); ?>" data-name="<?php echo htmlspecialchars($addon['name']); ?>" style="margin-right: 15px; margin-top: 5px;">
+                                <input type="checkbox" name="k_accessories" value="<?php echo floatval($addon['percent_value']); ?>" data-name="<?php echo htmlspecialchars($addon['name']); ?>" data-type="<?php echo $addon['value_type'] ?? 'sqft'; ?>" style="margin-right: 15px; margin-top: 5px;">
                                 <div>
                                     <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px;"><?php echo htmlspecialchars($addon['name']); ?></div>
                                     <div style="color: #E74C3C; font-weight: bold; font-size: 13px; display: none;">₹<?php echo floatval($addon['percent_value']); ?>/sq ft</div>
@@ -525,18 +525,15 @@ while($row = $calc_breakdowns->fetch_assoc()){ $calc_breakdowns_data[$row['categ
                         <ul class="breakdown-list">
                             <div id="dynamic-breakdown-list"></div>
                             <!-- Add-ons -->
-                            <li id="li-addon-8" style="display: none; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px; margin-top: 10px; color: var(--accent-color);">
-                                <span>+ Civil work</span>
-                                <span id="bd-addon-8">₹0</span>
+                            <?php 
+                            foreach($calc_addons_data as $addon): 
+                                if ($addon['category_slug'] === 'modular-kitchen') continue;
+                            ?>
+                            <li id="li-addon-<?php echo $addon['id']; ?>" style="display: none; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px; margin-top: 10px; color: var(--accent-color);">
+                                <span>+ <?php echo htmlspecialchars($addon['name']); ?></span>
+                                <span id="bd-addon-<?php echo $addon['id']; ?>">₹0</span>
                             </li>
-                            <li id="li-addon-10" style="display: none; color: var(--accent-color);">
-                                <span>+ Flooring</span>
-                                <span id="bd-addon-10">₹0</span>
-                            </li>
-                            <li id="li-addon-4" style="display: none; color: var(--accent-color);">
-                                <span>+ Curtain/Soft Furnishing</span>
-                                <span id="bd-addon-4">₹0</span>
-                            </li>
+                            <?php endforeach; ?>
                             <!-- Kitchen Accessories -->
                             <div id="kitchen-accessories-list" style="display: none; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px; margin-top: 10px; color: #F4B41A;">
                                 <!-- Dynamically populated -->
