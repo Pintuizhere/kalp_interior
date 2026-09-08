@@ -9,6 +9,10 @@ while($row = $result->fetch_assoc()) {
     $about_content[$row['section_key']] = $row['content_value'];
 }
 $stmt->close();
+
+$pageTitle = "About Kalp Interior Design Studio | Interior Designer in Ranchi";
+$pageDescription = "Learn about Kalp Interior Design Studio, a professional interior design studio in Ranchi focused on creating beautiful, functional and personalized residential and commercial spaces.";
+
 include 'includes/header.php'; 
 ?>
 

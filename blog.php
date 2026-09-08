@@ -1,5 +1,7 @@
 <?php 
 $currentPage = 'blog';
+$pageTitle = "Interior Design Blog & Tips | Kalp Interior Design Studio";
+$pageDescription = "Read the latest interior design trends, tips, and inspiration from Kalp Interior Design Studio's experts in Ranchi to elevate your home and office.";
 include 'includes/header.php'; 
 require_once 'admin/config/db.php';
 ?>

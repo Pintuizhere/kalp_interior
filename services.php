@@ -1,5 +1,7 @@
 <?php 
 $currentPage = 'services';
+$pageTitle = "Interior Design Services in Ranchi | Kalp Interior Design Studio";
+$pageDescription = "Explore interior design services by Kalp Interior Design Studio, including residential, commercial and furniture design in Ranchi.";
 include 'includes/header.php'; 
 ?>
 

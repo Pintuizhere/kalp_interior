@@ -1,5 +1,7 @@
 <?php 
 $currentPage = 'calculator';
+$pageTitle = "Get an Interior Design Estimate | Kalp Interior Studio";
+$pageDescription = "Use Kalp Interior Design Studio's online calculator to get a quick estimate for your residential or commercial interior design project in Ranchi.";
 include 'includes/header.php'; 
 ?>
 

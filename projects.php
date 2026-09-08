@@ -22,6 +22,8 @@ $total_pages = ceil($total_projects / $limit);
 $proj_query = "SELECT * FROM projects WHERE status != 'Archived' ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
 $projects = $conn->query($proj_query);
 
+$pageTitle = "Interior Design Projects | Kalp Interior Design Studio";
+$pageDescription = "Explore residential and commercial interior design projects by Kalp Interior Design Studio in Ranchi, showcasing modern, elegant and functional spaces.";
 include 'includes/header.php'; 
 ?>
 

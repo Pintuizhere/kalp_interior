@@ -1,11 +1,20 @@
-<?php require_once __DIR__ . '/../admin/config/db.php'; ?>
+<?php 
+require_once __DIR__ . '/../admin/config/db.php'; 
+
+// Default SEO Tags
+$defaultTitle = "Kalp Interior Design Studio | Best Interior Designer in Ranchi";
+$defaultDescription = "Kalp Interior Design Studio offers professional residential and commercial interior design services in Ranchi, creating stylish and functional spaces.";
+
+$seoTitle = isset($pageTitle) ? $pageTitle : $defaultTitle;
+$seoDescription = isset($pageDescription) ? $pageDescription : $defaultDescription;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalp Interior Studio - Turning Your Dream Home into Reality</title>
-    <meta name="description" content="Experience Modern Luxury in Architecture with Kalp Interior Studio.">
+    <title><?php echo htmlspecialchars($seoTitle); ?></title>
+    <meta name="description" content="<?php echo htmlspecialchars($seoDescription); ?>">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/images/favicon.png">

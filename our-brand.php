@@ -1,6 +1,8 @@
 <?php 
 $currentPage = 'our-brand';
 require_once 'admin/config/db.php';
+$pageTitle = "Our Brand & Values | Kalp Interior Design Studio Ranchi";
+$pageDescription = "Discover the story and values behind Kalp Interior Design Studio. We are Ranchi's trusted name for premium, innovative, and functional interior design.";
 include 'includes/header.php'; 
 ?>
 

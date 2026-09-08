@@ -1,5 +1,7 @@
 <?php 
 $currentPage = 'contact';
+$pageTitle = "Contact Interior Designer in Ranchi | Kalp Interior Design Studio";
+$pageDescription = "Contact Kalp Interior Design Studio for professional residential and commercial interior design services in Ranchi. Let's create your ideal space.";
 include 'includes/header.php'; 
 ?>
 
