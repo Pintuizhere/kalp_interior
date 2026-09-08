@@ -29,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_service'])) {
     $icon = htmlspecialchars($_POST['icon']);
     $status = htmlspecialchars($_POST['status']);
     $display_order = (int)$_POST['display_order'];
+    $meta_title = $_POST['meta_title'] ?? '';
+    $meta_description = $_POST['meta_description'] ?? '';
+    $meta_keywords = $_POST['meta_keywords'] ?? '';
     
     // Check if new cover image is uploaded
     $has_new_image = isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] == 0;
@@ -64,11 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_service'])) {
     if ($edit_id > 0) {
         // UPDATE
         if ($db_image) {
-            $stmt = $conn->prepare("UPDATE services SET name=?, short_desc=?, icon=?, cover_image=?, status=?, display_order=? WHERE id=?");
-            $stmt->bind_param("sssssii", $name, $short_desc, $icon, $db_image, $status, $display_order, $edit_id);
+            $stmt = $conn->prepare("UPDATE services SET name=?, short_desc=?, icon=?, cover_image=?, status=?, display_order=?, meta_title=?, meta_description=?, meta_keywords=? WHERE id=?");
+            $stmt->bind_param("sssssisssi", $name, $short_desc, $icon, $db_image, $status, $display_order, $meta_title, $meta_description, $meta_keywords, $edit_id);
         } else {
-            $stmt = $conn->prepare("UPDATE services SET name=?, short_desc=?, icon=?, status=?, display_order=? WHERE id=?");
-            $stmt->bind_param("ssssii", $name, $short_desc, $icon, $status, $display_order, $edit_id);
+            $stmt = $conn->prepare("UPDATE services SET name=?, short_desc=?, icon=?, status=?, display_order=?, meta_title=?, meta_description=?, meta_keywords=? WHERE id=?");
+            $stmt->bind_param("sssiisssi", $name, $short_desc, $icon, $status, $display_order, $meta_title, $meta_description, $meta_keywords, $edit_id);
         }
         
         if ($stmt->execute()) {
@@ -81,8 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_service'])) {
         // INSERT
         // If no image is provided, use a placeholder
         $db_image = $db_image ? $db_image : 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
-        $stmt = $conn->prepare("INSERT INTO services (name, short_desc, icon, cover_image, status, display_order) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssi", $name, $short_desc, $icon, $db_image, $status, $display_order);
+        $stmt = $conn->prepare("INSERT INTO services (name, short_desc, icon, cover_image, status, display_order, meta_title, meta_description, meta_keywords) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssisss", $name, $short_desc, $icon, $db_image, $status, $display_order, $meta_title, $meta_description, $meta_keywords);
         if ($stmt->execute()) {
             $_SESSION['success_msg'] = "Service added successfully!";
         } else {
@@ -287,6 +290,20 @@ include 'includes/sidebar.php';
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label style="display: block; font-weight: 600; margin-bottom: 8px;">Short Description (For Cards)</label>
                             <input type="text" name="short_desc" class="form-control" placeholder="Brief summary of the service" required value="<?php echo $edit_data ? htmlspecialchars($edit_data['short_desc']) : ''; ?>" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        
+                        <!-- SEO Details -->
+                        <div class="form-group" style="grid-column: 1 / -1; margin-top: 10px; padding-top: 15px; border-top: 1px solid #eee;">
+                            <h4 style="margin-bottom: 15px; font-size: 1.1rem; color: var(--text-dark);">SEO Details</h4>
+                            
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Meta Title</label>
+                            <input type="text" name="meta_title" class="form-control" placeholder="SEO Title" value="<?php echo $edit_data ? htmlspecialchars($edit_data['meta_title'] ?? '') : ''; ?>" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px;">
+                            
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Meta Description</label>
+                            <textarea name="meta_description" class="form-control" rows="3" placeholder="SEO Description" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; resize: vertical;"><?php echo $edit_data ? htmlspecialchars($edit_data['meta_description'] ?? '') : ''; ?></textarea>
+                            
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Meta Keywords</label>
+                            <input type="text" name="meta_keywords" class="form-control" placeholder="e.g. interior design, home decor, best designer" value="<?php echo $edit_data ? htmlspecialchars($edit_data['meta_keywords'] ?? '') : ''; ?>" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
                         
                         <div class="form-group" style="grid-column: 1 / -1;">

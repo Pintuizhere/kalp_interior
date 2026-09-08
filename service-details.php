@@ -294,10 +294,10 @@ include 'includes/header.php';
                 if (!isset($conn)) {
                     require_once __DIR__ . '/admin/config/db.php';
                 }
-                $proj_res = $conn->query("SELECT id, title, location, category, cover_image, area FROM projects ORDER BY id DESC LIMIT 3");
+                $proj_res = $conn->query("SELECT id, title, slug, location, category, cover_image, area FROM projects ORDER BY id DESC LIMIT 3");
                 
                 $fallback_images = [
-                    "uploads/media/after_1785707371_620.webp",
+                    "uploads/media/after_1786277987_649.jpeg",
                     "uploads/media/kitchen_design_cover.png",
                     "uploads/media/3d_rendering_cover.png"
                 ];
@@ -307,7 +307,7 @@ include 'includes/header.php';
                     while($p = $proj_res->fetch_assoc()) {
                         // Use DB cover image if available, otherwise use a fallback
                         if (!empty($p['cover_image'])) {
-                            $p_img = 'uploads/projects/' . htmlspecialchars($p['cover_image']);
+                            $p_img = htmlspecialchars($p['cover_image']);
                         } else {
                             $p_img = $fallback_images[$img_idx % 3];
                         }
@@ -319,17 +319,17 @@ include 'includes/header.php';
                         $p_id = $p['id'];
                         $img_idx++;
                 ?>
-                <div class="mp-card">
+                <a href="project-details.php?slug=<?php echo !empty($p['slug']) ? urlencode($p['slug']) : $p_id; ?>" class="mp-card" style="text-decoration: none;">
                     <img src="<?php echo $p_img; ?>" alt="<?php echo $p_title; ?>" class="mp-card-bg">
                     <div class="mp-card-top">
                         <div class="mp-tag"><?php echo $p_cat; ?></div>
                     </div>
                     <div class="mp-card-bottom">
                         <div class="mp-card-title-row" style="margin-bottom: 10px;">
-                            <a href="project-details.php?slug=<?php echo !empty($proj['slug']) ? urlencode($proj['slug']) : $p_id; ?>" class="mp-link-btn" style="width: 35px; height: 35px;"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 12px;"></i></a>
+                            <div class="mp-link-btn" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 12px;"></i></div>
                             <div class="mp-title-col">
-                                <h3 style="font-size: 14px;"><?php echo strtoupper($p_title); ?></h3>
-                                <p style="font-size: 11px;"><i class="fa-solid fa-location-dot"></i> <?php echo $p_location; ?></p>
+                                <h3 style="font-size: 14px; color: white;"><?php echo strtoupper($p_title); ?></h3>
+                                <p style="font-size: 11px; color: rgba(255,255,255,0.8);"><i class="fa-solid fa-location-dot"></i> <?php echo $p_location; ?></p>
                             </div>
                         </div>
                         <div class="mp-tags-row">
@@ -337,7 +337,7 @@ include 'includes/header.php';
                             <span class="mp-pill" style="font-size: 10px; padding: 4px 10px;"><?php echo $p_cat; ?></span>
                         </div>
                     </div>
-                </div>
+                </a>
                 <?php 
                     }
                 } else {
