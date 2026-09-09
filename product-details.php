@@ -545,41 +545,59 @@ include 'includes/header.php';
             <div class="specs-section">
                 <h2 class="specs-title">Product Specifications</h2>
                 <table class="specs-table">
+                    <?php if(!empty($product['spec_material'])): ?>
                     <tr>
                         <td>Material</td>
                         <td>:</td>
-                        <td>Teak Wood + Fabric</td>
+                        <td><?php echo htmlspecialchars($product['spec_material']); ?></td>
                     </tr>
+                    <?php endif; ?>
+                    <?php if(!empty($product['spec_color'])): ?>
                     <tr>
                         <td>Color</td>
                         <td>:</td>
-                        <td>Beige</td>
+                        <td><?php echo htmlspecialchars($product['spec_color']); ?></td>
                     </tr>
+                    <?php endif; ?>
+                    <?php if(!empty($product['spec_seater'])): ?>
                     <tr>
                         <td>Seater</td>
                         <td>:</td>
-                        <td>1 Seater</td>
+                        <td><?php echo htmlspecialchars($product['spec_seater']); ?></td>
                     </tr>
+                    <?php endif; ?>
+                    <?php if(!empty($product['spec_dim_inches'])): ?>
                     <tr>
                         <td>Dimensions (inches)</td>
                         <td>:</td>
-                        <td>41 L x 86 W x 76 H</td>
+                        <td><?php echo htmlspecialchars($product['spec_dim_inches']); ?></td>
                     </tr>
+                    <?php endif; ?>
+                    <?php if(!empty($product['spec_dim_cm'])): ?>
                     <tr>
                         <td>Dimensions (cm)</td>
                         <td>:</td>
-                        <td>104.1 L x 218.4 W x 193 H</td>
+                        <td><?php echo htmlspecialchars($product['spec_dim_cm']); ?></td>
                     </tr>
+                    <?php endif; ?>
+                    <?php if(!empty($product['spec_pack_content'])): ?>
                     <tr>
                         <td>Pack Content</td>
                         <td>:</td>
-                        <td>3 - Seater Recliner</td>
+                        <td><?php echo htmlspecialchars($product['spec_pack_content']); ?></td>
                     </tr>
+                    <?php endif; ?>
+                    <?php if(!empty($product['spec_finish'])): ?>
                     <tr>
                         <td>Finish / Texture</td>
                         <td>:</td>
-                        <td>High-Quality Smooth, Elegant Fabric Finish</td>
+                        <td><?php echo htmlspecialchars($product['spec_finish']); ?></td>
                     </tr>
+                    <?php endif; ?>
+                    
+                    <?php if(empty($product['spec_material']) && empty($product['spec_color']) && empty($product['spec_dim_inches'])): ?>
+                        <tr><td colspan="3" style="color:var(--text-gray);">Specifications not available for this product.</td></tr>
+                    <?php endif; ?>
                 </table>
             </div>
 

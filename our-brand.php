@@ -165,33 +165,33 @@ include 'includes/header.php';
         </div>
 
         <div class="brand-grid">
-            
-            <!-- Modular Kitchen Card -->
+            <?php 
+            $brand_query = "SELECT * FROM brand_collections ORDER BY position ASC";
+            $brand_result = $conn->query($brand_query);
+            if ($brand_result && $brand_result->num_rows > 0):
+                while($brand = $brand_result->fetch_assoc()):
+            ?>
             <div class="product-card">
                 <div class="product-image">
-                    <img src="assets/images/modular_kitchen.jpg" alt="Modular Kitchen">
+                    <img src="assets/images/<?php echo $brand['image'] ? htmlspecialchars($brand['image']) : 'placeholder.jpg'; ?>" alt="<?php echo htmlspecialchars($brand['title']); ?>">
                 </div>
                 <div class="product-info">
-                    <h3 class="product-title">Modular Kitchens</h3>
-                    <p class="product-desc">Sleek, highly functional, and fully customized layouts for modern homes.</p>
-                    <a href="modular-kitchen-estimate.php" class="product-btn">
-                        <i class="fa-solid fa-calculator"></i> Get an Estimate
+                    <h3 class="product-title"><?php echo htmlspecialchars($brand['title']); ?></h3>
+                    <p class="product-desc"><?php echo nl2br(htmlspecialchars($brand['description'])); ?></p>
+                    <a href="<?php echo htmlspecialchars($brand['btn_link']); ?>" class="product-btn">
+                        <?php if(!empty($brand['btn_icon'])): ?>
+                            <i class="<?php echo htmlspecialchars($brand['btn_icon']); ?>" style="margin-right: 8px;"></i> 
+                        <?php endif; ?>
+                        <?php echo htmlspecialchars($brand['btn_text']); ?>
                     </a>
                 </div>
             </div>
-
-            <!-- Premium Furniture Card -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="assets/images/luxury_furniture.jpg" alt="Premium Furniture">
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Premium Furniture</h3>
-                    <p class="product-desc">Elevate your living spaces with our curated selection of bespoke furniture. We combine rich textures with sleek metallic accents to create timeless, comfortable pieces.</p>
-                    <a href="shop-furniture.php" class="product-btn"><i class="fa-solid fa-cart-shopping" style="margin-right: 8px;"></i> Shop Now</a>
-                </div>
-            </div>
-
+            <?php 
+                endwhile;
+            else:
+            ?>
+                <p style="color: white; text-align: center; grid-column: 1 / -1;">No collections found.</p>
+            <?php endif; ?>
         </div>
     </section>
 

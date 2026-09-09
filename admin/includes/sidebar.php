@@ -63,6 +63,11 @@
         <p class="menu-label">E-COMMERCE</p>
         <ul class="menu-list">
             <li>
+                <a href="manage_shop_users.php" class="<?php echo ($currentPage == 'shop_users') ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-users"></i> Shop Users
+                </a>
+            </li>
+            <li>
                 <a href="manage_shop_orders.php" class="<?php echo ($currentPage == 'shop_orders') ? 'active' : ''; ?>">
                     <i class="fa-solid fa-cart-shopping"></i> Orders
                 </a>
@@ -75,6 +80,11 @@
             <li>
                 <a href="manage_shop_categories.php" class="<?php echo ($currentPage == 'shop_categories') ? 'active' : ''; ?>">
                     <i class="fa-solid fa-tags"></i> Shop Categories
+                </a>
+            </li>
+            <li>
+                <a href="manage_brand_collections.php" class="<?php echo ($currentPage == 'brand_collections') ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-gem"></i> Brand Collections
                 </a>
             </li>
         </ul>
