@@ -16,6 +16,9 @@ $seoDescription = isset($pageDescription) ? $pageDescription : $defaultDescripti
     <title><?php echo htmlspecialchars($seoTitle); ?></title>
     <meta name="description" content="<?php echo htmlspecialchars($seoDescription); ?>">
     
+    <!-- Canonical URL to prevent duplicate content issues -->
+    <link rel="canonical" href="<?php echo htmlspecialchars((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"); ?>">
+    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
     

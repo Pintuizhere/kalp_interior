@@ -89,7 +89,7 @@
             ?>
             <div class="news-card" data-category="<?php echo $cat; ?>" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative;">
                 <div class="card-image" style="position: relative; height: 240px;">
-                    <img src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img loading="lazy" width="400" height="300" src="<?php echo $imagePath; ?>" alt="<?php echo htmlspecialchars($item['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
                     <span class="badge" style="position: absolute; top: 20px; left: 20px; background: <?php echo $badgeBg; ?>; color: <?php echo $badgeColor; ?>; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform:uppercase;">
                         <?php echo htmlspecialchars($item['category']); ?>
                     </span>

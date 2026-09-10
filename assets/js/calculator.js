@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleSuccessfulLogin() {
         document.getElementById('otp-error').style.display = 'none';
 
+        // Trigger Meta Pixel Lead Event
+        if (typeof fbq !== 'undefined') {
+            fbq('track', 'Lead');
+        }
+
         const nameVal = document.getElementById('lead-name').value;
         const contactVal = document.getElementById('lead-contact').value;
         const locationVal = document.getElementById('lead-location').value;
@@ -251,9 +256,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (standardSteps) standardSteps.style.display = 'block';
                         if (specificTypeLabel) specificTypeLabel.style.display = 'flex';
                         if (kitchenOptions) kitchenOptions.style.display = 'none';
-                        
+
                         const val = this.querySelector('input').value;
-                        if(val === 'residential' || val === 'commercial') {
+                        if (val === 'residential' || val === 'commercial') {
                             document.querySelectorAll('.pkg-card').forEach(el => {
                                 el.style.display = (el.getAttribute('data-category') === val) ? 'flex' : 'none';
                             });
@@ -612,7 +617,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             if (el.closest('li')) el.closest('li').style.display = 'none';
                         }
                     });
-                    
+
                     const dynListEl = document.getElementById('dynamic-breakdown-list');
                     if (dynListEl) {
                         dynListEl.innerHTML = `<li style="display: flex;">
@@ -725,14 +730,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         const val = parseFloat(addon.value || 0);
                         const id = addon.getAttribute('data-id');
                         const valType = addon.getAttribute('data-type') || 'percent';
-                        
+
                         let cost = 0;
                         if (valType === 'percent') {
                             cost = baseCost * (val / 100); // Percentage
                         } else {
                             cost = val; // Fixed INR value
                         }
-                        
+
                         addonsCost += cost;
 
                         // Show in breakdown
@@ -759,7 +764,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const breakdownData = window.CALC_CONFIG ? window.CALC_CONFIG.breakdownData : {};
                 const selectedCat = document.querySelector('input[name="property_category"]:checked');
                 const catSlug = selectedCat ? selectedCat.value : 'residential';
-                
+
                 const catBreakdowns = breakdownData[catSlug] || [];
                 let dynamicListHtml = '';
                 let accumulatedCost = 0;
@@ -1003,7 +1008,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         'total': totalCost
                                     };
                                     computedCosts['decorative'] = subtotal - (computedCosts['furniture'] + computedCosts['wardrobes'] + computedCosts['kitchen'] + computedCosts['false-ceiling'] + computedCosts['electrical'] + computedCosts['design'] + computedCosts['paint']);
-    
+
                                     if (checkedAddons) {
                                         checkedAddons.forEach(addon => {
                                             computedCosts['addon-' + addon.value] = Math.round(baseCost * (parseInt(addon.value || 0) / 100));
@@ -1018,7 +1023,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 // Clear standard items but keep addons if we want, or just recreate them
                                 // Actually we can just keep the dynamic items first.
                                 let dynamicPdfHtml = '';
-                                
+
                                 const breakdownData = window.CALC_CONFIG ? window.CALC_CONFIG.breakdownData : {};
                                 const catBreakdowns = breakdownData[catSlug] || [];
                                 let accumulatedCostPdf = 0;
@@ -1035,7 +1040,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                                     dynamicPdfHtml += `<tr><td style="padding: 5px 0;">${item.name}</td><td style="padding: 5px 0; text-align: right;">${formatNum(itemCost)}</td></tr>`;
                                 });
-                                
+
                                 // Save addons that might be in the list
                                 const addonIds = ['8', '10', '4'];
                                 let addonsHtml = '';
@@ -1206,7 +1211,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.CALC_CONFIG && window.CALC_CONFIG.forceCategory) {
         const forcedCategory = window.CALC_CONFIG.forceCategory;
         const categoryCard = document.querySelector(`.calc-option-card[data-target="${forcedCategory}-options"]`) || document.getElementById(`cat-${forcedCategory}`) || document.getElementById(`cat-kitchen`);
-        
+
         if (categoryCard) {
             categoryCard.click();
         }

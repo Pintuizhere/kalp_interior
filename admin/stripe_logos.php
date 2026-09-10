@@ -249,7 +249,7 @@ include 'includes/sidebar.php';
         <h3 style="margin-top: 0;">Zoom & Crop Logo</h3>
         <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Use your mouse wheel to zoom in/out, and drag to position.</p>
         <div style="max-height:400px; overflow:hidden; margin-bottom:20px;">
-            <img id="imageToCrop" src="" style="max-width:100%; display:block;">
+            <img id="imageToCrop" src="" alt="Image to crop" style="max-width:100%; display:block;">
         </div>
         <button type="button" id="btnCancelCrop" class="btn-secondary" style="padding:10px 20px; margin-right:10px; border:1px solid #ccc; background:#eee; cursor:pointer; border-radius: 5px;">Cancel</button>
         <button type="button" id="btnSaveCrop" class="btn-primary" style="padding:10px 20px; cursor:pointer; border-radius: 5px; background: var(--accent-color); color: var(--text-dark); border: none; font-weight: 600;">Apply Crop</button>

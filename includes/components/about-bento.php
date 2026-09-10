@@ -17,11 +17,11 @@ if (!function_exists('get_bento_val')) {
             
             <!-- Card 1: Large Image Quote -->
             <div class="bento-card bento-card-quote">
-                <img src="<?php echo get_bento_val('about_b1_image', $about_content, 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); ?>" alt="Interior Design" class="bento-bg-img">
+                <img loading="lazy" src="<?php echo get_bento_val('about_b1_image', $about_content, 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); ?>" alt="Interior Design" class="bento-bg-img">
                 <div class="bento-quote-overlay">
                     <p class="bento-quote-text"><?php echo get_bento_val('about_b1_quote', $about_content, '"In design, we find the delicate balance between function and beauty, where every space whispers the stories of those who dwell within. At Kalp, our passion lies in crafting these narratives with elegance and purpose."'); ?></p>
                     <div class="bento-author">
-                        <img src="<?php echo get_bento_val('about_b1_avatar', $about_content, 'assets/images/founder.jpeg'); ?>" alt="<?php echo get_bento_val('about_b1_name', $about_content, 'Reedam Kumar'); ?> - Founder">
+                        <img loading="lazy" src="<?php echo get_bento_val('about_b1_avatar', $about_content, 'assets/images/founder.jpeg'); ?>" alt="<?php echo get_bento_val('about_b1_name', $about_content, 'Reedam Kumar'); ?> - Founder">
                         <div class="bento-author-info">
                             <strong><?php echo get_bento_val('about_b1_name', $about_content, 'Reedam Kumar'); ?></strong>
                             <span><?php echo get_bento_val('about_b1_role', $about_content, 'Kalp Interior Design Studio, Founder'); ?></span>
@@ -45,7 +45,7 @@ if (!function_exists('get_bento_val')) {
 
             <!-- Card 4: Video Overlay -->
             <div class="bento-card bento-card-video">
-                <img src="<?php echo get_bento_val('about_b4_image', $about_content, 'https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'); ?>" alt="Video Background" class="bento-bg-img">
+                <img loading="lazy" src="<?php echo get_bento_val('about_b4_image', $about_content, 'https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'); ?>" alt="Video Background" class="bento-bg-img">
                 <div class="bento-video-overlay">
                     <?php 
                     $video_url = get_bento_val('about_b4_video', $about_content, '');
@@ -78,7 +78,7 @@ if (!function_exists('get_bento_val')) {
                     ];
                     for($i=1; $i<=5; $i++): 
                     ?>
-                    <img src="<?php echo get_bento_val('about_b6_avatar_'.$i, $about_content, $default_avatars[$i-1]); ?>" alt="Team <?php echo $i; ?>">
+                    <img loading="lazy" src="<?php echo get_bento_val('about_b6_avatar_'.$i, $about_content, $default_avatars[$i-1]); ?>" alt="Team <?php echo $i; ?>">
                     <?php endfor; ?>
                 </div>
                 <p class="bento-team-text"><?php echo get_bento_val('about_b6_text', $about_content, '18 Creative Masterminds'); ?></p>

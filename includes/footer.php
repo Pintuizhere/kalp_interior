@@ -30,26 +30,26 @@ if (!function_exists('gval')) {
         <div class="container" style="position: relative; z-index: 2;">
             <div class="footer-top">
                 <div class="footer-col">
-                    <a href="index.php" class="footer-logo" style="display: block; margin-bottom: 20px;">
-                        <img src="assets/images/logo.png" alt="Kalp Interior Studio" style="max-height: 50px; width: auto; object-fit: contain;">
+                    <a href="index.php" class="footer-logo" aria-label="Home" style="display: block; margin-bottom: 20px;">
+                        <img src="assets/images/logo.png" alt="Kalp Interior Studio" width="150" height="50" style="max-height: 50px; width: auto; object-fit: contain; display: block;">
                     </a>
                     <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.6;"><?php echo gval('footer_text', $global_settings, 'A home is built with emotions before it is built with materials.'); ?></p>
                     
                     <div class="social-links" style="display: flex; gap: 10px;">
                         <?php if (gval('social_twitter', $global_settings)): ?>
-                        <a href="<?php echo gval('social_twitter', $global_settings); ?>" style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white;"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="<?php echo gval('social_twitter', $global_settings); ?>" target="_blank" rel="noopener noreferrer" aria-label="Twitter" style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white;"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
                         <?php endif; ?>
                         
                         <?php if (gval('social_facebook', $global_settings)): ?>
-                        <a href="<?php echo gval('social_facebook', $global_settings); ?>" style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white;"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="<?php echo gval('social_facebook', $global_settings); ?>" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white;"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
                         <?php endif; ?>
                         
                         <?php if (gval('social_linkedin', $global_settings)): ?>
-                        <a href="<?php echo gval('social_linkedin', $global_settings); ?>" style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white;"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="<?php echo gval('social_linkedin', $global_settings); ?>" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white;"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
                         <?php endif; ?>
                         
                         <?php if (gval('social_instagram', $global_settings)): ?>
-                        <a href="<?php echo gval('social_instagram', $global_settings); ?>" style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white;"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="<?php echo gval('social_instagram', $global_settings); ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white;"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
                         <?php endif; ?>
                     </div>
                 </div>
