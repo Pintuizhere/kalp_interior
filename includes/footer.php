@@ -106,6 +106,6 @@ if (!function_exists('gval')) {
 
 
     <!-- Custom JS -->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js" defer></script>
 </body>
 </html>

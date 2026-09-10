@@ -29,9 +29,21 @@ $seoDescription = isset($pageDescription) ? $pageDescription : $defaultDescripti
     ?>
     <base href="<?php echo $baseUrl; ?>">
     
-    <!-- Google Fonts -->
+    <!-- Preconnects to improve FCP -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <?php
+    // Preload Hero Image for better LCP
+    if (isset($home_content)) {
+        $bg_image_preload = !empty($home_content['hero_bg_image']) ? htmlspecialchars($home_content['hero_bg_image']) : 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
+        echo '<link rel="preload" as="image" href="' . $bg_image_preload . '" fetchpriority="high">';
+    }
+    ?>
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
