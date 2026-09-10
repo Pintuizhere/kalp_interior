@@ -41,8 +41,11 @@
                 if($res && $res->num_rows > 0) {
                     while($row = $res->fetch_assoc()) {
                         $img_path = htmlspecialchars($row['image_path']);
-                        $alt = htmlspecialchars($row['alt_text']);
-                        $partners_logos_html .= '<img src="'.$img_path.'" alt="'.$alt.'" style="height: 25px; width: auto; transition: transform 0.3s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'"> ';
+                        // Check if the file actually exists on disk to prevent 404 console errors
+                        if (file_exists(__DIR__ . '/../../' . $row['image_path'])) {
+                            $alt = htmlspecialchars($row['alt_text']);
+                            $partners_logos_html .= '<img src="'.$img_path.'" alt="'.$alt.'" style="height: 25px; width: auto; transition: transform 0.3s;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'"> ';
+                        }
                     }
                 } else {
                     // Fallback to placeholders if no logos in DB yet
