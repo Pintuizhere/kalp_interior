@@ -3,6 +3,7 @@ require_once 'admin/config/db.php';
 $calc_cats = $conn->query("SELECT * FROM calc_categories ORDER BY id ASC");
 $calc_cats_data = [];
 while($row = $calc_cats->fetch_assoc()){ 
+    if ($row['status'] != 1) continue;
     if (isset($exclude_category) && $row['slug'] === $exclude_category) continue;
     $calc_cats_data[] = $row; 
 }

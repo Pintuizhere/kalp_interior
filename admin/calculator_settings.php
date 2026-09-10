@@ -48,11 +48,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $conn->real_escape_string($_POST['name']);
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name), '-'));
         $icon = $conn->real_escape_string($_POST['icon']);
+        $status = isset($_POST['status']) ? (int)$_POST['status'] : 1;
         
         if ($id > 0) {
-            $conn->query("UPDATE calc_categories SET name='$name', slug='$slug', icon='$icon' WHERE id=$id");
+            $conn->query("UPDATE calc_categories SET name='$name', slug='$slug', icon='$icon', status=$status WHERE id=$id");
         } else {
-            $conn->query("INSERT INTO calc_categories (name, slug, icon) VALUES ('$name', '$slug', '$icon')");
+            $conn->query("INSERT INTO calc_categories (name, slug, icon, status) VALUES ('$name', '$slug', '$icon', $status)");
         }
         $success_msg = "Category saved!";
     }
@@ -256,13 +257,20 @@ include 'includes/sidebar.php';
                                 <button type="button" class="btn-select" onclick="openIconPicker('cat_icon', 'cat_icon_preview')">Select</button>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select name="status" id="cat_status" class="form-control">
+                                <option value="1">Active (Show)</option>
+                                <option value="0">Inactive (Hide)</option>
+                            </select>
+                        </div>
                         <button type="submit" class="btn-primary">Save Category</button>
                         <button type="button" class="btn-primary" style="background:#ccc; color:#333; margin-left:10px;" onclick="resetForm('cat')">Reset</button>
                     </form>
                 </div>
                 <div class="table-wrapper">
                     <table class="admin-table">
-                        <thead><tr><th>Icon</th><th>Name</th><th>Slug</th><th>Action</th></tr></thead>
+                        <thead><tr><th>Icon</th><th>Name</th><th>Slug</th><th>Status</th><th>Action</th></tr></thead>
                         <tbody>
                             <?php while($row = $categories->fetch_assoc()): ?>
                             <tr>
@@ -270,8 +278,15 @@ include 'includes/sidebar.php';
                                 <td><strong><?php echo $row['name']; ?></strong></td>
                                 <td><?php echo $row['slug']; ?></td>
                                 <td>
+                                    <?php if($row['status'] == 1): ?>
+                                        <span style="background:#dcfce7; color:#166534; padding:3px 8px; border-radius:12px; font-size:12px;">Active</span>
+                                    <?php else: ?>
+                                        <span style="background:#fee2e2; color:#991b1b; padding:3px 8px; border-radius:12px; font-size:12px;">Hidden</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
                                     <div class="action-btns">
-                                        <a href="javascript:void(0)" class="btn-icon" onclick="editCat(<?php echo $row['id']; ?>, '<?php echo addslashes($row['name']); ?>', '<?php echo addslashes($row['icon']); ?>')"><i class="fa-solid fa-pen"></i></a>
+                                        <a href="javascript:void(0)" class="btn-icon" onclick="editCat(<?php echo $row['id']; ?>, '<?php echo addslashes($row['name']); ?>', '<?php echo addslashes($row['icon']); ?>', <?php echo $row['status']; ?>)"><i class="fa-solid fa-pen"></i></a>
                                         <a href="?delete=calc_categories&id=<?php echo $row['id']; ?>" class="btn-icon delete" onclick="return confirm('Delete?');"><i class="fa-solid fa-trash"></i></a>
                                     </div>
                                 </td>
@@ -868,10 +883,11 @@ function resetForm(prefix) {
     }
 }
 
-function editCat(id, name, icon) {
+function editCat(id, name, icon, status = 1) {
     document.getElementById('cat_id').value = id;
     document.getElementById('cat_name').value = name;
     document.getElementById('cat_icon').value = icon;
+    document.getElementById('cat_status').value = status;
     let v = (icon || '').trim();
     document.getElementById('cat_icon_preview').className = v ? (v.includes('fa-') ? v : 'fa-solid fa-' + v) : 'fa-solid fa-house';
 }
