@@ -60,9 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 styleText = 'Modular Kitchen Custom Design';
                 const packageEl = document.querySelector('input[name="k_package"]:checked');
                 if (packageEl) {
-                    if (packageEl.value == 1500) packageText = 'Essentials';
-                    else if (packageEl.value == 2000) packageText = 'Premium';
-                    else packageText = 'Luxury';
+                    packageText = packageEl.nextElementSibling.textContent.trim();
                 }
             } else {
                 if (typeEl) {
@@ -926,9 +924,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const packageEl = document.querySelector('input[name="k_package"]:checked');
                                 if (packageEl) {
                                     finishValue = packageEl.value;
-                                    if (finishValue == 1500) packageText = 'Essentials';
-                                    else if (finishValue == 2000) packageText = 'Premium';
-                                    else packageText = 'Luxury';
+                                    packageText = packageEl.nextElementSibling.textContent.trim();
                                 }
                             } else {
                                 if (typeEl) {
@@ -1028,18 +1024,33 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const catBreakdowns = breakdownData[catSlug] || [];
                                 let accumulatedCostPdf = 0;
 
-                                catBreakdowns.forEach((item, index) => {
-                                    const pct = parseFloat(item.percent_value) / 100;
-                                    let itemCost = 0;
-                                    if (index === catBreakdowns.length - 1) {
-                                        itemCost = subtotal - accumulatedCostPdf;
-                                    } else {
-                                        itemCost = Math.round(subtotal * pct);
-                                        accumulatedCostPdf += itemCost;
-                                    }
+                                if (isKitchen) {
+                                    let totalFt = 0;
+                                    ['A', 'B', 'C'].forEach(lbl => {
+                                        const ftInput = document.getElementById(`k_measure_${lbl}_ft`);
+                                        const inInput = document.getElementById(`k_measure_${lbl}_in`);
+                                        if (ftInput) {
+                                            totalFt += parseFloat(ftInput.value || 0);
+                                            if (inInput) totalFt += (parseFloat(inInput.value || 0) / 12);
+                                        }
+                                    });
+                                    const rate = parseFloat(finishValue);
+                                    const baseCost = totalFt * rate;
+                                    dynamicPdfHtml += `<tr><td style="padding: 5px 0;">Modular Kitchen</td><td style="padding: 5px 0; text-align: right;">${formatNum(baseCost)}</td></tr>`;
+                                } else {
+                                    catBreakdowns.forEach((item, index) => {
+                                        const pct = parseFloat(item.percent_value) / 100;
+                                        let itemCost = 0;
+                                        if (index === catBreakdowns.length - 1) {
+                                            itemCost = subtotal - accumulatedCostPdf;
+                                        } else {
+                                            itemCost = Math.round(subtotal * pct);
+                                            accumulatedCostPdf += itemCost;
+                                        }
 
-                                    dynamicPdfHtml += `<tr><td style="padding: 5px 0;">${item.name}</td><td style="padding: 5px 0; text-align: right;">${formatNum(itemCost)}</td></tr>`;
-                                });
+                                        dynamicPdfHtml += `<tr><td style="padding: 5px 0;">${item.name}</td><td style="padding: 5px 0; text-align: right;">${formatNum(itemCost)}</td></tr>`;
+                                    });
+                                }
 
                                 // Save addons that might be in the list
                                 const addonIds = ['8', '10', '4'];
@@ -1070,28 +1081,53 @@ document.addEventListener('DOMContentLoaded', function () {
                             if (pdfKAccList) {
                                 pdfKAccList.innerHTML = '';
                                 if (isKitchen) {
+                                    let totalFt = 0;
+                                    ['A', 'B', 'C'].forEach(lbl => {
+                                        const ftInput = document.getElementById(`k_measure_${lbl}_ft`);
+                                        const inInput = document.getElementById(`k_measure_${lbl}_in`);
+                                        if (ftInput) {
+                                            totalFt += parseFloat(ftInput.value || 0);
+                                            if (inInput) totalFt += (parseFloat(inInput.value || 0) / 12);
+                                        }
+                                    });
                                     const checkedAccs = document.querySelectorAll('input[name="k_accessories"]:checked');
                                     checkedAccs.forEach(acc => {
-                                        const cost = parseFloat(acc.value);
+                                        const val = parseFloat(acc.value);
+                                        const valType = acc.getAttribute('data-type') || 'sqft';
+                                        const cost = (valType === 'fixed') ? val : (val * totalFt);
                                         pdfKAccList.innerHTML += `<tr><td style="padding-bottom: 4px; color:#F4B41A;">+ ${acc.getAttribute('data-name')}</td><td style="text-align: right; color:#F4B41A;">${formatNum(cost)}</td></tr>`;
                                     });
                                 }
                             }
 
                             // Material Specs
-                            const specSource = document.getElementById('specs-' + finishValue);
                             const specDest = document.getElementById('pdf-material-specs');
                             const specTitle = document.getElementById('pdf-material-specs-title');
 
                             if (specTitle && packageText !== 'N/A') {
                                 specTitle.textContent = packageText + ' Material Specification';
                             }
-                            if (specSource && specDest && !isKitchen) {
-                                specDest.innerHTML = specSource.innerHTML;
-                                specTitle.style.display = 'block';
+                            
+                            if (isKitchen) {
+                                if (specDest) {
+                                    const packageEl = document.querySelector('input[name="k_package"]:checked');
+                                    if (packageEl && packageEl.parentElement) {
+                                        const specsDiv = packageEl.parentElement.lastElementChild;
+                                        if (specsDiv) {
+                                            specDest.innerHTML = specsDiv.innerHTML;
+                                            if (specTitle) specTitle.style.display = 'block';
+                                        }
+                                    }
+                                }
                             } else {
-                                if (specDest) specDest.innerHTML = "";
-                                if (specTitle) specTitle.style.display = 'none';
+                                const specSource = document.getElementById('specs-' + finishValue);
+                                if (specSource && specDest) {
+                                    specDest.innerHTML = specSource.innerHTML;
+                                    if (specTitle) specTitle.style.display = 'block';
+                                } else {
+                                    if (specDest) specDest.innerHTML = "";
+                                    if (specTitle) specTitle.style.display = 'none';
+                                }
                             }
 
                             // Prepare html2pdf
