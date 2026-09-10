@@ -55,7 +55,7 @@ if (!function_exists('gval')) {
                 </div>
                 
                 <div class="footer-col">
-                    <h4>Quick Links</h4>
+                    <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 20px; color: white;">Quick Links</h2>
                     <div class="footer-links">
                         <a href="index.php">Home</a>
                         <a href="about.php">About Us</a>
@@ -66,7 +66,7 @@ if (!function_exists('gval')) {
                 </div>
                 
                 <div class="footer-col">
-                    <h4>Projects</h4>
+                    <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 20px; color: white;">Projects</h2>
                     <div class="footer-links">
                         <a href="projects.php">Residential Design</a>
                         <a href="projects.php">Commercial Design</a>
@@ -76,7 +76,7 @@ if (!function_exists('gval')) {
                 </div>
                 
                 <div class="footer-widget">
-                    <h4 style="font-size: 16px; margin-bottom: 25px; color: white;">Contact Us</h4>
+                    <h2 style="font-size: 16px; margin-bottom: 25px; color: white; font-weight: bold;">Contact Us</h2>
                     <ul class="footer-links">
                         <li><?php echo gval('contact_phone', $global_settings, '+91 9234772288'); ?></li>
                         <li><?php echo gval('contact_email', $global_settings, 'info@kalpinteriors.com'); ?></li>

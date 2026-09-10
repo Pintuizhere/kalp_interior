@@ -37,7 +37,7 @@
                                     </div>
                                     
                                     <!-- Slider Input -->
-                                    <input type="range" min="0" max="100" value="50" class="ba-slider-input" id="ba-slider_<?php echo $pair['id']; ?>" style="touch-action: pan-y;">
+                                    <input type="range" min="0" max="100" value="50" class="ba-slider-input" id="ba-slider_<?php echo $pair['id']; ?>" style="touch-action: pan-y;" aria-label="Before/After Image Slider">
                                     
                                     <!-- Slider Handle -->
                                     <div class="ba-slider-handle" id="ba-slider-handle_<?php echo $pair['id']; ?>">
@@ -59,7 +59,7 @@
                                     <div class="ba-image ba-image-before" style="background-image: url('assets/images/after.webp');">
                                         <span class="ba-label">After</span>
                                     </div>
-                                    <input type="range" min="0" max="100" value="50" class="ba-slider-input" style="touch-action: pan-y;">
+                                    <input type="range" min="0" max="100" value="50" class="ba-slider-input" style="touch-action: pan-y;" aria-label="Before/After Image Slider">
                                     <div class="ba-slider-handle">
                                         <i class="fa-solid fa-angle-left"></i>
                                         <i class="fa-solid fa-angle-right"></i>
@@ -74,7 +74,7 @@
                 <?php if ($total_pairs > 1): ?>
                 <!-- Navigation -->
                 <div class="ba-carousel-nav" style="display: flex; justify-content: center; align-items: center; gap: 30px; position: absolute; bottom: 0; left: 0; width: 100%;">
-                    <button class="ba-prev" onclick="moveBaCarousel(-1)" style="background: var(--accent-color); border: none; color: #333; width: 45px; height: 45px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);"><i class="fa-solid fa-angle-left"></i></button>
+                    <button class="ba-prev" onclick="moveBaCarousel(-1)" aria-label="Previous Slide" style="background: var(--accent-color); border: none; color: #333; width: 45px; height: 45px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);"><i class="fa-solid fa-angle-left"></i></button>
                     
                     <div class="ba-dots" style="display: flex; gap: 15px;">
                         <?php for($i=0; $i<$total_pairs; $i++): ?>
@@ -82,7 +82,7 @@
                         <?php endfor; ?>
                     </div>
                     
-                    <button class="ba-next" onclick="moveBaCarousel(1)" style="background: var(--accent-color); border: none; color: #333; width: 45px; height: 45px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);"><i class="fa-solid fa-angle-right"></i></button>
+                    <button class="ba-next" onclick="moveBaCarousel(1)" aria-label="Next Slide" style="background: var(--accent-color); border: none; color: #333; width: 45px; height: 45px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);"><i class="fa-solid fa-angle-right"></i></button>
                 </div>
                 <?php endif; ?>
                 

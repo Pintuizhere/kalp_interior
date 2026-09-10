@@ -59,7 +59,7 @@ $g_in = !empty($global_settings['social_linkedin']) ? $global_settings['social_l
                     </div>
                     <div class="form-group" style="margin-bottom: 20px;">
                         <label>Select Services *</label>
-                        <select class="form-control" name="service" style="appearance: auto; cursor: pointer; color: #66756C;">
+                        <select class="form-control" name="service" aria-label="Select Service" style="appearance: auto; cursor: pointer; color: #66756C;">
                             <option value="" disabled selected>Select a service</option>
                             <option value="INTERIOR DESIGN">INTERIOR DESIGN</option>
                             <option value="RESIDENTIAL DESIGN">RESIDENTIAL DESIGN</option>

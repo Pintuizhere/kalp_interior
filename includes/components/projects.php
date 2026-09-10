@@ -163,7 +163,7 @@ if ($cat_check && $cat_check->num_rows > 0) {
                     </div>
                     <div class="project-bottom-content">
                         <div class="project-bottom-main">
-                            <a href="project-details.php?slug=<?php echo !empty($proj['slug']) ? urlencode($proj['slug']) : $proj['id']; ?>" class="project-action-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                            <a href="project-details.php?slug=<?php echo !empty($proj['slug']) ? urlencode($proj['slug']) : $proj['id']; ?>" class="project-action-btn" aria-label="View <?php echo htmlspecialchars($proj['title'] ?: 'Project'); ?> Details"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                             <div class="project-bottom-info">
                                 <h3><a href="project-details.php?slug=<?php echo !empty($proj['slug']) ? urlencode($proj['slug']) : $proj['id']; ?>" style="color: inherit; text-decoration: none;"><?php echo htmlspecialchars($proj['title'] ?: 'Untitled Project'); ?></a></h3>
                                 <p><i class="fa-solid fa-location-dot"></i> <?php echo htmlspecialchars($proj['location'] ?: 'N/A'); ?></p>

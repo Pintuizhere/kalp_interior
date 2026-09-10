@@ -49,8 +49,8 @@ $testi_stats_stmt->close();
         </div>
 
         <div style="display: flex; justify-content: flex-end; gap: 15px; margin-bottom: 30px;">
-            <button class="testi-nav-arrow prev-slide" style="width: 45px; height: 45px; background-color: white; color: var(--text-dark); border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition);"><i class="fa-solid fa-chevron-left"></i></button>
-            <button class="testi-nav-arrow next-slide" style="width: 45px; height: 45px; background-color: var(--text-dark); color: white; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition);"><i class="fa-solid fa-chevron-right"></i></button>
+            <button class="testi-nav-arrow prev-slide" aria-label="Previous Testimonial" style="width: 45px; height: 45px; background-color: white; color: var(--text-dark); border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition);"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            <button class="testi-nav-arrow next-slide" aria-label="Next Testimonial" style="width: 45px; height: 45px; background-color: var(--text-dark); color: white; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: var(--transition);"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
         </div>
         
         <div class="testi-slider-wrapper" style="position: relative; overflow: hidden; margin-bottom: 80px;">
