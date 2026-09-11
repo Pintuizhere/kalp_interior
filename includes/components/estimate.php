@@ -33,7 +33,7 @@
                 
                 // Icon circle
                 echo '<div style="width: 70px; height: 70px; border-radius: 50%; background-color: rgba(234, 177, 54, 0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 25px auto;">';
-                echo '<img src="https://api.iconify.design/ph/' . $option['icon'] . '.svg?color=%23EAB136" alt="' . $option['title'] . '" style="width: 35px; height: 35px;">';
+                echo '<img loading="lazy" src="https://api.iconify.design/ph/' . $option['icon'] . '.svg?color=%23EAB136" alt="' . $option['title'] . '" style="width: 35px; height: 35px;">';
                 echo '</div>';
                 
                 // Title
@@ -45,7 +45,7 @@
                 // Button
                 echo '<a href="calculator.php" class="estimate-btn" style="width: 100%; padding: 8px 15px 8px 8px; background: var(--text-dark); border: none; color: white; font-weight: 500; font-size: 15px; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 15px; text-decoration: none; box-sizing: border-box;">';
                 echo '<span style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background-color: var(--accent-color); flex-shrink: 0; transition: transform 0.3s ease;" class="btn-icon-circle">';
-                echo '<img src="https://api.iconify.design/ph/arrow-up-right-bold.svg?color=%231E2723" alt="arrow" style="width: 18px; height: 18px;">';
+                echo '<img loading="lazy" src="https://api.iconify.design/ph/arrow-up-right-bold.svg?color=%231E2723" alt="arrow" style="width: 18px; height: 18px;">';
                 echo '</span>';
                 echo '<span style="flex-grow: 1; text-align: center; padding-right: 15px;">Calculate Estimate</span>';
                 echo '</a>';

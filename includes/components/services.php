@@ -49,7 +49,7 @@
             <div class="hp-service-card">
                 <a href="service-details.php?slug=<?php echo !empty($srv['slug']) ? urlencode($srv['slug']) : $srv['id']; ?>" style="display: block; text-decoration: none; color: inherit;">
                     <div class="hp-sc-image">
-                        <img src="<?php echo htmlspecialchars($srv_img); ?>" alt="<?php echo htmlspecialchars($srv['name']); ?>">
+                        <img loading="lazy" src="<?php echo htmlspecialchars($srv_img); ?>" alt="<?php echo htmlspecialchars($srv['name']); ?>">
                         <div class="hp-sc-icon"><i class="<?php echo htmlspecialchars($srv['icon']); ?>"></i></div>
                     </div>
                 </a>

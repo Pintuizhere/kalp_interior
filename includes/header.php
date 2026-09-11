@@ -39,14 +39,16 @@ $seoDescription = isset($pageDescription) ? $pageDescription : $defaultDescripti
     // Preload Hero Image for better LCP
     if (isset($home_content)) {
         $bg_image_preload = !empty($home_content['hero_bg_image']) ? htmlspecialchars($home_content['hero_bg_image']) : 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
-        echo '<link rel="preload" as="image" href="' . $bg_image_preload . '" fetchpriority="high">';
+        $bg_image_mobile_preload = strpos($bg_image_preload, 'unsplash.com') !== false ? str_replace('w=1920', 'w=800', $bg_image_preload) : $bg_image_preload;
+        
+        echo '<link rel="preload" as="image" href="' . $bg_image_mobile_preload . '" media="(max-width: 768px)" fetchpriority="high">';
+        echo '<link rel="preload" as="image" href="' . $bg_image_preload . '" media="(min-width: 769px)" fetchpriority="high">';
     }
     ?>
 
     <!-- Google Fonts -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/variables.css">
@@ -178,25 +180,6 @@ $seoDescription = isset($pageDescription) ? $pageDescription : $defaultDescripti
             display: block;
             opacity: 1;
         }
-    </style>
-    <!-- Facebook Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window,document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '4702202480051069');
-    fbq('track', 'PageView');
-    </script>
-    <noscript>
-    <img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=4702202480051069&ev=PageView&noscript=1"/>
-    </noscript>
-    <!-- End Facebook Pixel Code -->
 </head>
 <body>
 

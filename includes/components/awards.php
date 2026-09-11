@@ -116,7 +116,7 @@
     <!-- Image Modal -->
     <div id="pressImageModal" class="press-modal">
         <span class="press-modal-close">&times;</span>
-        <img class="press-modal-content" id="pressModalImg" alt="Press Image">
+        <img loading="lazy" class="press-modal-content" id="pressModalImg" alt="Press Image">
     </div>
 
     <!-- JavaScript for Accordion Interactivity & Modal -->

@@ -32,7 +32,7 @@
                 <p class="cp-block-text"><?php echo isset($about_content['mission_text']) ? htmlspecialchars($about_content['mission_text']) : 'At KALP Interior Design Studio, our mission is to design spaces that seamlessly blend creativity...'; ?></p>
             </div>
             <div class="cp-block-image-right">
-                <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80" alt="Mission Interior">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&q=80" alt="Mission Interior">
             </div>
         </div>
 

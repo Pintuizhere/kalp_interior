@@ -35,7 +35,7 @@
                         $about_bg_src = '../' . $about_bg_src;
                     }
                     ?>
-                    <img src="<?php echo htmlspecialchars($about_bg_src); ?>" alt="Awards Ceremony" class="about-intro-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+                    <img loading="lazy" src="<?php echo htmlspecialchars($about_bg_src); ?>" alt="Awards Ceremony" class="about-intro-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
                     
                     <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(26, 38, 30, 0.9), transparent); z-index: 1;"></div>
                     

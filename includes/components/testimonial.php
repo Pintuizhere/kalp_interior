@@ -66,11 +66,11 @@ $testi_stats_stmt->close();
                 <!-- Slide -->
                 <div class="testi-slide" style="min-width: calc(33.333% - 20px); background: white; border-radius: 10px; padding: 40px; box-shadow: 0 5px 20px rgba(0,0,0,0.03);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                        <img src="<?php echo $img_src; ?>" alt="<?php echo htmlspecialchars($row['client_name']); ?>" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                        <img loading="lazy" src="<?php echo $img_src; ?>" alt="<?php echo htmlspecialchars($row['client_name']); ?>" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                         <?php if(!empty($row['company_name']) || !empty($row['company_logo'])): ?>
                         <span style="font-weight: 700; color: var(--text-dark); font-size: 16px; display: flex; align-items: center; gap: 5px;">
                             <?php if(!empty($row['company_logo'])): ?>
-                            <img src="uploads/testimonials/<?php echo htmlspecialchars($row['company_logo']); ?>" style="max-height: <?php echo !empty($row['company_logo_size']) ? (int)$row['company_logo_size'] : 40; ?>px;">
+                            <img loading="lazy" src="uploads/testimonials/<?php echo htmlspecialchars($row['company_logo']); ?>" style="max-height: <?php echo !empty($row['company_logo_size']) ? (int)$row['company_logo_size'] : 40; ?>px;">
                             <?php elseif(!empty($row['company_icon'])): ?>
                             <i class="<?php echo htmlspecialchars($row['company_icon']); ?>" style="color: #EAB136; font-size: <?php echo !empty($row['company_logo_size']) ? (int)$row['company_logo_size'] : 40; ?>px;"></i> 
                             <?php endif; ?>

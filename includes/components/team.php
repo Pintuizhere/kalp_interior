@@ -207,7 +207,7 @@
       <article class="team-card" tabindex="0">
         <div class="photo-frame">
           <div class="photo">
-            <img src="<?php echo $img_src; ?>" alt="<?php echo htmlspecialchars($member['name']); ?>">
+            <img loading="lazy" src="<?php echo $img_src; ?>" alt="<?php echo htmlspecialchars($member['name']); ?>">
           </div>
         </div>
         <h3><?php echo htmlspecialchars($member['name']); ?></h3>

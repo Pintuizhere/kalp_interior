@@ -149,22 +149,22 @@
 <section class="pre-footer-cta">
     <!-- Floating Images using Unsplash Interior design placeholders -->
     <div class="pfc-img-wrapper pfc-wrap-1">
-        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
     </div>
     <div class="pfc-img-wrapper pfc-wrap-2">
-        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
     </div>
     <div class="pfc-img-wrapper pfc-wrap-3">
-        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
     </div>
     <div class="pfc-img-wrapper pfc-wrap-4">
-        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
     </div>
     <div class="pfc-img-wrapper pfc-wrap-5">
-        <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
     </div>
     <div class="pfc-img-wrapper pfc-wrap-6">
-        <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=400&q=80" alt="Interior Details" class="pfc-floating-img">
     </div>
 
     <div class="pfc-badge">Ready?</div>

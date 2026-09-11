@@ -40,7 +40,7 @@
                 echo '<div class="e2e-item" style="text-align: center; cursor: pointer; transition: transform 0.3s ease;">';
                 echo '<div class="e2e-icon-wrapper" style="position: relative; display: inline-block; margin-bottom: 15px;">';
                 // Using iconify api for SVG outline icons (color matches text-dark #1E2723)
-                echo '<img src="https://api.iconify.design/ph/' . $service['icon'] . '.svg?color=%231E2723" alt="' . $service['title'] . '" class="e2e-img" style="width: 50px; height: 50px; transition: 0.3s ease;">';
+                echo '<img loading="lazy" src="https://api.iconify.design/ph/' . $service['icon'] . '.svg?color=%231E2723" alt="' . $service['title'] . '" class="e2e-img" style="width: 50px; height: 50px; transition: 0.3s ease;">';
                 // Small accent line for the dual-tone effect using theme accent color
                 echo '<div style="position: absolute; bottom: 8px; right: -5px; width: 12px; height: 2px; background-color: var(--accent-color);"></div>';
                 echo '<div style="position: absolute; top: 8px; left: -2px; width: 4px; height: 4px; border-radius: 50%; background-color: var(--accent-color);"></div>';

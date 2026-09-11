@@ -22,7 +22,7 @@
             <!-- Left Side: Image -->
             <div class="founder-image-col" style="flex: 1; position: relative;">
                 <div style="background-color: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 8px;">
-                    <img src="assets/images/founder.jpeg" alt="Reedam Kumar - Founder" style="width: 100%; height: auto; display: block; filter: contrast(1.1) brightness(0.9);">
+                    <img loading="lazy" src="assets/images/founder.jpeg" alt="Reedam Kumar - Founder" style="width: 100%; height: auto; display: block; filter: contrast(1.1) brightness(0.9);">
                 </div>
             </div>
             

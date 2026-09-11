@@ -27,14 +27,14 @@
 
             <!-- Right Image Content -->
             <div class="story-image-wrapper">
-                <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Kalp Interior Design Studio" class="story-main-img">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Kalp Interior Design Studio" class="story-main-img">
                 
                 <!-- Stacked Cards Overlay -->
                 <div class="story-stacked-cards">
                     <div class="stacked-card card-back-2"></div>
                     <div class="stacked-card card-back-1"></div>
                     <div class="stacked-card card-front">
-                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Beautiful Interior">
+                        <img loading="lazy" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Beautiful Interior">
                         <p style="font-weight: 600; font-family: var(--font-accent); font-size: 1.1rem; color: var(--text-dark); line-height: 1.4;">Spaces that feel like home.</p>
                     </div>
                 </div>
