@@ -1,6 +1,5 @@
 <?php
 $bg_image = !empty($home_content['hero_bg_image']) ? htmlspecialchars($home_content['hero_bg_image']) : 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
-$bg_image_mobile = strpos($bg_image, 'unsplash.com') !== false ? str_replace('w=1920', 'w=800', $bg_image) : $bg_image;
 $rating_text = !empty($home_content['hero_rating_text']) ? htmlspecialchars($home_content['hero_rating_text']) : '4.9/5 Rating - 15,000 Reviews';
 $btn1_text = !empty($home_content['hero_btn1_text']) ? htmlspecialchars($home_content['hero_btn1_text']) : 'Contact us';
 $btn1_link = !empty($home_content['hero_btn1_link']) ? htmlspecialchars($home_content['hero_btn1_link']) : 'contact.php';
@@ -23,22 +22,17 @@ $avatar_4 = !empty($home_content['hero_avatar_4']) ? htmlspecialchars($home_cont
     <!-- Hero Section -->
     <section class="new-hero-section">
         <div class="new-hero-wrapper">
-        <div class="hero-bg-image">
-                <picture>
-                    <source media="(max-width: 768px)" srcset="<?php echo $bg_image_mobile; ?>">
-                    <img src="<?php echo $bg_image; ?>" alt="Interior Design" fetchpriority="high" style="width: 100%; height: 100%; object-fit: cover;">
-                </picture>
-            </div>
+            <div class="hero-bg-image" style="background-image: url('<?php echo $bg_image; ?>');"></div>
             <div class="hero-bg-overlay"></div>
         <div class="container" style="position: relative; z-index: 3; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center;">
             <div class="new-hero-content">
                 
                 <div class="hero-rating-widget">
                     <div class="rating-avatars">
-                        <img src="<?php echo $avatar_1; ?>" alt="User" width="40" height="40" fetchpriority="high">
-                        <img src="<?php echo $avatar_2; ?>" alt="User" width="40" height="40" fetchpriority="high">
-                        <img src="<?php echo $avatar_3; ?>" alt="User" width="40" height="40" fetchpriority="high">
-                        <img src="<?php echo $avatar_4; ?>" alt="User" width="40" height="40" fetchpriority="high">
+                        <img src="<?php echo $avatar_1; ?>" alt="User">
+                        <img src="<?php echo $avatar_2; ?>" alt="User">
+                        <img src="<?php echo $avatar_3; ?>" alt="User">
+                        <img src="<?php echo $avatar_4; ?>" alt="User">
                     </div>
                     <div class="rating-text-block">
                         <div class="rating-stars">
