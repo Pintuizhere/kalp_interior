@@ -381,8 +381,7 @@ if ($categories_result && $categories_result->num_rows > 0) {
     <!-- Second Marquee -->
 
     
-    <!-- Contact Form -->
-    <?php include 'includes/components/contact.php'; ?>
+    <!-- Contact Form Removed -->
 
 </main>
 

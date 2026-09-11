@@ -216,7 +216,7 @@ $seoDescription = isset($pageDescription) ? $pageDescription : $defaultDescripti
                     <li><a href="about.php" class="<?php echo (isset($currentPage) && $currentPage == 'about') ? 'active' : ''; ?>">About Us</a></li>
                     <li><a href="services.php" class="<?php echo (isset($currentPage) && $currentPage == 'services') ? 'active' : ''; ?>">Services</a></li>
                     <li><a href="projects.php" class="<?php echo (isset($currentPage) && $currentPage == 'projects') ? 'active' : ''; ?>">Projects</a></li>
-                    <li><a href="our-brand.php" class="<?php echo (isset($currentPage) && $currentPage == 'our-brand') ? 'active' : ''; ?>">Our Brand</a></li>
+
                     <li><a href="blog.php" class="<?php echo (isset($currentPage) && $currentPage == 'blog') ? 'active' : ''; ?>">Blog</a></li>
                     <li><a href="contact.php" class="<?php echo (isset($currentPage) && $currentPage == 'contact') ? 'active' : ''; ?>">Contact Us</a></li>
                     <li class="mobile-only-li">

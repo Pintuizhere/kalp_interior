@@ -10,7 +10,7 @@ include 'includes/header.php';
             <h1 class="banner-title">Modular Kitchen Estimate</h1>
             <div class="breadcrumbs">
                 <a href="index.php">Home</a> <span class="divider">/</span>
-                <a href="our-brand.php">Our Brand</a> <span class="divider">/</span>
+
                 <span class="current">Modular Kitchen Estimate</span>
             </div>
         </div>
