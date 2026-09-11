@@ -1,8 +1,4 @@
 <?php
-$pageTitle = 'Leads';
-$currentPage = 'leads';
-include 'includes/header.php';
-include 'includes/sidebar.php';
 require_once 'config/db.php';
 
 $success_msg = '';
@@ -25,6 +21,11 @@ if (isset($_GET['delete'])) {
     }
     $stmt->close();
 }
+
+$pageTitle = 'Leads';
+$currentPage = 'leads';
+include 'includes/header.php';
+include 'includes/sidebar.php';
 
 // Query params
 $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';

@@ -1,0 +1,18 @@
+User-agent: *
+# Disallow search engines from crawling backend and partial directories
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /scratch/
+Disallow: /cgi-bin/
+
+# Disallow search engines from crawling form processors and action scripts
+Disallow: /process_contact.php
+Disallow: /cart_action.php
+Disallow: /check_images.php
+
+# Explicitly allow crawling of your assets and uploaded media so your images rank on Google
+Allow: /assets/
+Allow: /uploads/
+
+# Specify your sitemap for better indexing
+Sitemap: https://kalpinteriors.com/sitemap.xml

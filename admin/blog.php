@@ -34,8 +34,19 @@ if (isset($_GET['delete'])) {
 
 include 'includes/header.php';
 include 'includes/sidebar.php';
+// Pagination setup
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$limit = 10;
+$offset = ($page - 1) * $limit;
+
+// Count total blogs
+$count_query = "SELECT COUNT(*) as total FROM blogs";
+$count_result = $conn->query($count_query);
+$total_blogs = $count_result->fetch_assoc()['total'];
+$total_pages = ceil($total_blogs / $limit);
+
 // Fetch blogs
-$blogs_query = "SELECT * FROM blogs ORDER BY created_at DESC";
+$blogs_query = "SELECT * FROM blogs ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
 $blogs_result = $conn->query($blogs_query);
 
 // Fetch categories for the dropdown
@@ -127,6 +138,23 @@ $categories_result = $conn->query($categories_query);
                     </tbody>
                 </table>
             </div>
+            
+            <?php if ($total_pages > 1): ?>
+            <div class="pagination" style="display: flex; justify-content: flex-end; gap: 5px; margin-top: 20px; padding-right: 25px; margin-bottom: 25px;">
+                <?php if($page > 1): ?>
+                    <a href="?page=<?php echo $page - 1; ?>" style="padding: 6px 12px; border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-dark); text-decoration: none; font-size: 13px;"><i class="fa-solid fa-angle-left"></i></a>
+                <?php endif; ?>
+                
+                <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?php echo $i; ?>" style="padding: 6px 12px; border: 1px solid <?php echo ($i == $page) ? 'var(--accent-color)' : 'var(--border-color)'; ?>; background: <?php echo ($i == $page) ? 'var(--accent-color)' : 'transparent'; ?>; border-radius: 4px; color: var(--text-dark); text-decoration: none; font-size: 13px; font-weight: <?php echo ($i == $page) ? 'bold' : 'normal'; ?>;"><?php echo $i; ?></a>
+                <?php endfor; ?>
+                
+                <?php if($page < $total_pages): ?>
+                    <a href="?page=<?php echo $page + 1; ?>" style="padding: 6px 12px; border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-dark); text-decoration: none; font-size: 13px;"><i class="fa-solid fa-angle-right"></i></a>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+            
         </div>
 
 

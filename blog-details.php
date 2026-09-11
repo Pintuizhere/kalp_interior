@@ -55,10 +55,10 @@ $post['content'] = preg_replace_callback(
 // Fix relative image paths from the editor
 $post['content'] = str_replace('../uploads/', 'uploads/', $post['content']);
 
-// Fetch all categories for the sidebar
-$categories_result = $conn->query("SELECT * FROM categories ORDER BY name ASC");
+// Fetch distinct categories that have published blog posts
+$categories_result = $conn->query("SELECT DISTINCT category as name FROM blogs WHERE status = 'Published' AND category != '' ORDER BY category ASC");
 $all_categories = [];
-if ($categories_result && $categories_result->num_rows > 0) {
+if($categories_result && $categories_result->num_rows > 0) {
     while($cat = $categories_result->fetch_assoc()) {
         $all_categories[] = $cat;
     }
@@ -227,17 +227,17 @@ if ($categories_result && $categories_result->num_rows > 0) {
                     .category-pills {
                         display: flex;
                         flex-wrap: wrap;
-                        gap: 8px;
+                        gap: 12px;
                     }
                     .category-pills a {
                         display: inline-block;
-                        padding: 8px 16px;
-                        background-color: #f9f9f9;
-                        border: 1px solid #eee;
+                        padding: 10px 22px;
+                        background-color: #fcfcfc;
+                        border: 1px solid #e8e8e8;
                         color: #555;
-                        font-size: 11px;
+                        font-size: 14px;
                         text-decoration: none;
-                        border-radius: 20px;
+                        border-radius: 30px;
                         transition: 0.3s;
                     }
                     .category-pills a:hover {
