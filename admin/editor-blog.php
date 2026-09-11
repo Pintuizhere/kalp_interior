@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_post'])) {
                     $stmt->bind_param("sssssssssi", $title, $slug, $category, $content, $status, $meta_title, $meta_description, $meta_keywords, $tags, $blog_id);
                 }
                 if ($stmt->execute()) {
-                    header("Location: editor-blog.php?edit=" . $blog_id . "&success=update");
+                    header("Location: blog.php?success=update");
                     exit;
                 } else {
                     $error_msg = "Database error: " . $stmt->error;
@@ -368,7 +368,7 @@ $categories_result = $conn->query("SELECT * FROM categories ORDER BY name ASC");
                                 <i class="fa-solid fa-map-pin" style="color:#8c8f94; margin-right:5px;"></i> Status: 
                                 <select name="status" style="border: none; background: none; font-weight: 600; cursor: pointer;">
                                     <option value="Draft" <?php echo ($edit_data && $edit_data['status'] == 'Draft') ? 'selected' : ''; ?>>Draft</option>
-                                    <option value="Published" <?php echo ($edit_data && $edit_data['status'] == 'Published') ? 'selected' : ''; ?>>Published</option>
+                                    <option value="Published" <?php echo (!$edit_data || $edit_data['status'] == 'Published') ? 'selected' : ''; ?>>Published</option>
                                 </select>
                             </div>
                             <div style="margin-bottom: 10px;">

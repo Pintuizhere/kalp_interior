@@ -3,11 +3,50 @@ require_once 'admin/config/db.php';
 $currentPage = 'projects';
 include 'includes/header.php'; 
 
+// Fetch Project Details
+$project = null;
+if (isset($_GET['slug'])) {
+    $slug = $_GET['slug'];
+    $stmt = $conn->prepare("SELECT * FROM projects WHERE slug = ? OR id = ?");
+    if ($stmt) {
+        $stmt->bind_param("ss", $slug, $slug);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($res->num_rows > 0) {
+            $project = $res->fetch_assoc();
+        }
+        $stmt->close();
+    }
+}
+
+if (!$project) {
+    echo "<div class='container' style='padding: 100px 0; text-align: center;'><h2>Project not found.</h2><a href='projects.php' class='btn btn-primary'>Back to Projects</a></div>";
+    include 'includes/footer.php';
+    exit;
+}
+
+// Variables for display
+$title = $project['title'] ?? 'MODERN 4 BHK<br>APARTMENT';
+$location = $project['location'] ?? 'Mumbai, India';
+$short_desc = $project['short_desc'] ?? 'A perfect blend of modern aesthetics and functional luxury...';
+$category = $project['category'] ?? 'Residential';
+$property_type = $project['property_type'] ?? 'Apartment';
+$area = $project['area'] ?? '2,350 sq. ft.';
+$year = $project['year'] ?? '2024';
+$style = $project['style'] ?? 'Modern Minimal';
+$scope = $project['scope'] ?? 'Full Interior Design';
+$about_title = $project['about_title'] ?? 'Crafted for Comfort.';
+$about_subtitle = $project['about_subtitle'] ?? 'Designed for Living.';
+$long_desc = $project['long_desc'] ?? '<p>...</p>';
+$cover_image = !empty($project['cover_image']) ? ltrim($project['cover_image'], '/') : 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80';
+
+
 // Fetch 3 recent projects for More Projects section
 $more_projects_query = "
     SELECT p.*, c.icon as cat_icon 
     FROM projects p 
     LEFT JOIN categories c ON p.category COLLATE utf8mb4_unicode_ci = c.name COLLATE utf8mb4_unicode_ci
+    WHERE p.id != " . (int)$project['id'] . "
     ORDER BY p.created_at DESC 
     LIMIT 3
 ";
@@ -22,9 +61,9 @@ $gallery_categories = $conn->query($gallery_cat_query);
     <!-- Page Banner -->
     <section class="page-banner">
         <div class="container">
-            <h1 class="banner-title">Projects</h1>
+            <h1 class="banner-title">Project Details</h1>
             <div class="breadcrumbs">
-                <a href="index">Home</a> <span class="divider">/</span> <span class="current">Project Details</span>
+                <a href="index.php">Home</a> <span class="divider">/</span> <a href="projects.php">Projects</a> <span class="divider">/</span> <span class="current"><?php echo htmlspecialchars(strip_tags(str_replace('<br>', ' ', $title))); ?></span>
             </div>
         </div>
     </section>
@@ -38,15 +77,15 @@ $gallery_categories = $conn->query($gallery_cat_query);
                 <!-- Left: Image Slider -->
                 <div class="hero-left-slider">
                     <div class="hero-main-img-wrapper">
-                        <span class="hero-tag"><i class="fa-solid fa-house" style="margin-right: 5px;"></i> Residential Design</span>
-                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80" alt="Main Room" class="hero-main-img">
+                        <span class="hero-tag"><i class="fa-solid fa-house" style="margin-right: 5px;"></i> <?php echo htmlspecialchars($category); ?></span>
+                        <img src="<?php echo htmlspecialchars($cover_image); ?>" alt="Main Room" class="hero-main-img">
                     </div>
                 </div>
 
                 <!-- Right: Details Box -->
                 <div class="hero-right-details">
                     <div class="hero-details-header">
-                        <h2 class="project-title">MODERN 4 BHK<br>APARTMENT</h2>
+                        <h2 class="project-title"><?php echo htmlspecialchars($title); ?></h2>
                         <div class="project-actions">
                             <button class="icon-btn" onclick="shareProject()"><i class="fa-solid fa-share-nodes"></i></button>
                         </div>
@@ -64,40 +103,40 @@ $gallery_categories = $conn->query($gallery_cat_query);
                         }
                         </script>
                     </div>
-                    <p class="location-pin"><i class="fa-solid fa-location-dot" style="color: var(--accent-color); margin-right: 8px;"></i> Mumbai, India</p>
+                    <p class="location-pin"><i class="fa-solid fa-location-dot" style="color: var(--accent-color); margin-right: 8px;"></i> <?php echo htmlspecialchars($location); ?></p>
                     
-                    <p class="short-desc">A perfect blend of modern aesthetics and functional luxury. This 4 BHK apartment is designed to reflect warmth, simplicity, and sophisticated living.</p>
+                    <p class="short-desc"><?php echo htmlspecialchars($short_desc); ?></p>
                     
                     <div class="project-meta-list">
                         <div class="meta-row">
                             <span class="meta-icon"><i class="fa-solid fa-building-user"></i></span>
                             <span class="meta-key">Project Type</span>
-                            <span class="meta-value">Residential</span>
+                            <span class="meta-value"><?php echo htmlspecialchars($category); ?></span>
                         </div>
                         <div class="meta-row">
                             <span class="meta-icon"><i class="fa-solid fa-house-chimney"></i></span>
                             <span class="meta-key">Property Type</span>
-                            <span class="meta-value">Apartment</span>
+                            <span class="meta-value"><?php echo htmlspecialchars($property_type); ?></span>
                         </div>
                         <div class="meta-row">
                             <span class="meta-icon"><i class="fa-solid fa-expand"></i></span>
                             <span class="meta-key">Area</span>
-                            <span class="meta-value">2,350 sq. ft.</span>
+                            <span class="meta-value"><?php echo htmlspecialchars($area); ?></span>
                         </div>
                         <div class="meta-row">
                             <span class="meta-icon"><i class="fa-regular fa-calendar-check"></i></span>
                             <span class="meta-key">Year of Completion</span>
-                            <span class="meta-value">2024</span>
+                            <span class="meta-value"><?php echo htmlspecialchars($year); ?></span>
                         </div>
                         <div class="meta-row">
                             <span class="meta-icon"><i class="fa-solid fa-pen-ruler"></i></span>
                             <span class="meta-key">Design Style</span>
-                            <span class="meta-value">Modern Minimal</span>
+                            <span class="meta-value"><?php echo htmlspecialchars($style); ?></span>
                         </div>
                         <div class="meta-row">
                             <span class="meta-icon"><i class="fa-solid fa-list-check"></i></span>
                             <span class="meta-key">Scope of Work</span>
-                            <span class="meta-value">Full Interior Design</span>
+                            <span class="meta-value"><?php echo htmlspecialchars($scope); ?></span>
                         </div>
                     </div>
 
@@ -138,11 +177,11 @@ $gallery_categories = $conn->query($gallery_cat_query);
                     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
                         <p class="section-subtitle" style="margin-bottom: 0;">ABOUT THE PROJECT</p>
                     </div>
-                    <h2 class="section-title">Crafted for Comfort.<br><span class="accent-text signature-text" style="color: var(--accent-color); font-weight: 400; text-transform: none;">Designed for Living.</span></h2>
+                    <h2 class="section-title"><?php echo htmlspecialchars($about_title); ?><br><span class="accent-text signature-text" style="color: var(--accent-color); font-weight: 400; text-transform: none;"> <?php echo htmlspecialchars($about_subtitle); ?></span></h2>
                     
-                    <p style="color: #666; line-height: 1.8; margin-bottom: 20px;">This modern 4 BHK apartment is designed for a young family seeking a balance between style and functionality.</p>
-                    <p style="color: #666; line-height: 1.8; margin-bottom: 20px;">The interiors feature a neutral palette, clean lines, and custom elements that create a calm and cohesive environment.</p>
-                    <p style="color: #666; line-height: 1.8;">From the spacious living area to the cozy bedrooms, each space is crafted to enhance everyday living.</p>
+                    <div class="long-desc-container">
+                        <?php echo $long_desc; ?>
+                    </div>
                 </div>
                 <div class="about-right">
                     <div class="project-highlight-card">
@@ -202,13 +241,20 @@ $gallery_categories = $conn->query($gallery_cat_query);
                     <div class="gallery-filters" style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button class="gallery-filter-btn active" style="background: var(--primary-color); color: white; border: 1px solid var(--primary-color); padding: 8px 20px; border-radius: 8px; font-size: 14px; cursor: pointer;"><i class="fa-solid fa-layer-group" style="margin-right: 5px;"></i> All</button>
                         <?php 
+                        $selected_gallery_cats = [];
+                        if (!empty($project['gallery_categories_selected'])) {
+                            $selected_gallery_cats = explode(',', $project['gallery_categories_selected']);
+                        }
+
                         if ($gallery_categories && $gallery_categories->num_rows > 0): 
                             while($cat = $gallery_categories->fetch_assoc()):
+                                if (empty($selected_gallery_cats) || in_array($cat['name'], $selected_gallery_cats)):
                         ?>
                         <button class="gallery-filter-btn" style="background: white; color: var(--text-dark); border: 1px solid rgba(0,0,0,0.15); padding: 8px 20px; border-radius: 8px; font-size: 14px; cursor: pointer;">
                             <?php if(!empty($cat['icon'])): ?><i class="<?php echo htmlspecialchars($cat['icon']); ?>" style="margin-right: 5px;"></i><?php endif; ?> <?php echo htmlspecialchars($cat['name']); ?>
                         </button>
                         <?php 
+                                endif;
                             endwhile;
                             $gallery_categories->data_seek(0);
                         endif; 
@@ -217,12 +263,35 @@ $gallery_categories = $conn->query($gallery_cat_query);
                 </div>
 
                 <div class="masonry-gallery-grid" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px;">
+                    <?php
+                    $has_gallery = false;
+                    $p_id = $project['id'] ?? null;
+                    if (!empty($p_id)) {
+                        $gal_query = "SELECT * FROM project_gallery WHERE project_id = $p_id ORDER BY display_order ASC";
+                        $gal_res = $conn->query($gal_query);
+                        if ($gal_res && $gal_res->num_rows > 0) {
+                            $has_gallery = true;
+                            $g_index = 0;
+                            while($g = $gal_res->fetch_assoc()) {
+                                $img_src = ltrim($g['image_path'], '/');
+                                // Assign columns based on index for masonry effect
+                                $col_span = 3; $height = '260px';
+                                if ($g_index == 0) { $col_span = 7; $height = '450px'; }
+                                else if ($g_index == 1) { $col_span = 5; $height = '450px'; }
+                                
+                                echo '<div class="gallery-item item-small" data-category="'.htmlspecialchars($g['category']).'" style="grid-column: span '.$col_span.'; position: relative; border-radius: 12px; overflow: hidden; height: '.$height.';">';
+                                echo '<img src="'.htmlspecialchars($img_src).'" alt="Gallery Image" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">';
+                                echo '</div>';
+                                $g_index++;
+                            }
+                        }
+                    }
+                    
+                    if (!$has_gallery):
+                    ?>
                     <!-- Top Left Image (spans 7 columns) -->
                     <div class="gallery-item item-large" style="grid-column: span 7; position: relative; border-radius: 12px; overflow: hidden; height: 450px;">
                         <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80" alt="Living Room" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
-                        <div class="play-button-overlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: rgba(0,0,0,0.4); border: 2px solid var(--accent-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s ease;">
-                            <i class="fa-solid fa-play" style="color: var(--accent-color); font-size: 24px; margin-left: 5px;"></i>
-                        </div>
                     </div>
                     
                     <!-- Top Right Image (spans 5 columns) -->
@@ -243,6 +312,7 @@ $gallery_categories = $conn->query($gallery_cat_query);
                     <div class="gallery-item item-small" style="grid-column: span 3; border-radius: 12px; overflow: hidden; height: 260px;">
                         <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&q=80" alt="Balcony" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -307,7 +377,7 @@ $gallery_categories = $conn->query($gallery_cat_query);
                     <?php while($proj = $more_projects_result->fetch_assoc()): ?>
                     <!-- Card -->
                     <div class="mp-card">
-                        <img src="<?php echo !empty($proj['cover_image']) ? htmlspecialchars($proj['cover_image']) : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80'; ?>" alt="<?php echo htmlspecialchars($proj['title']); ?>" class="mp-card-bg">
+                        <img src="<?php echo !empty($proj['cover_image']) ? htmlspecialchars(ltrim($proj['cover_image'], '/')) : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80'; ?>" alt="<?php echo htmlspecialchars($proj['title']); ?>" class="mp-card-bg">
                         <div class="mp-card-top">
                             <div class="mp-tag">
                                 <?php if(!empty($proj['cat_icon'])): ?><i class="<?php echo htmlspecialchars($proj['cat_icon']); ?>"></i> <?php endif; ?>

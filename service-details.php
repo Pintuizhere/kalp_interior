@@ -307,7 +307,7 @@ include 'includes/header.php';
                     while($p = $proj_res->fetch_assoc()) {
                         // Use DB cover image if available, otherwise use a fallback
                         if (!empty($p['cover_image'])) {
-                            $p_img = htmlspecialchars($p['cover_image']);
+                            $p_img = htmlspecialchars(ltrim($p['cover_image'], '/'));
                         } else {
                             $p_img = $fallback_images[$img_idx % 3];
                         }

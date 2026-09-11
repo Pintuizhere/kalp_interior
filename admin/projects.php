@@ -101,8 +101,8 @@ $currentPage = 'projects';
 $success_msg = '';
 $error_msg = '';
 
-if (isset($_GET['delete_id'])) {
-    $delete_id = (int)$_GET['delete_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+    $delete_id = (int)$_POST['delete_id'];
     
     // Try to delete the associated cover image file
     $res = $conn->query("SELECT cover_image FROM projects WHERE id = $delete_id");
@@ -127,11 +127,17 @@ if (isset($_GET['delete_id'])) {
     }
 }
 
-if (isset($_GET['success']) && $_GET['success'] == 'delete') {
-    $success_msg = "Project deleted successfully!";
+if (isset($_GET['success'])) {
+    if ($_GET['success'] == 'delete') {
+        $success_msg = "Project deleted successfully!";
+    } elseif ($_GET['success'] == 'add') {
+        $success_msg = "Project added successfully!";
+    } elseif ($_GET['success'] == 'edit') {
+        $success_msg = "Project updated successfully!";
+    }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['ajax_action'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['ajax_action']) && !isset($_POST['delete_id'])) {
     $title = $conn->real_escape_string($_POST['title'] ?? '');
     $slug = $conn->real_escape_string($_POST['slug'] ?? '');
     if(empty($slug) && !empty($title)) {
@@ -181,14 +187,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['ajax_action'])) {
     $meta_title = $conn->real_escape_string($_POST['meta_title'] ?? '');
     $meta_keywords = $conn->real_escape_string($_POST['meta_keywords'] ?? '');
     $meta_description = $conn->real_escape_string($_POST['meta_description'] ?? '');
+    $gallery_categories_selected = isset($_POST['gallery_categories_selected']) ? implode(',', $_POST['gallery_categories_selected']) : '';
+
+    // Image Upload Handling
+    $cover_image_path = '';
+    if (isset($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
+        $upload_dir = '../assets/img/projects/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        $file_extension = strtolower(pathinfo($_FILES['cover_image']['name'], PATHINFO_EXTENSION));
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        if (in_array($file_extension, $allowed_extensions)) {
+            $file_name = uniqid('proj_') . '.' . $file_extension;
+            $target_file = $upload_dir . $file_name;
+            
+            if (move_uploaded_file($_FILES['cover_image']['tmp_name'], $target_file)) {
+                $cover_image_path = '/assets/img/projects/' . $file_name;
+            }
+        }
+    }
 
     if (!empty($project_id)) {
         // UPDATE existing project
-        $stmt = $conn->prepare("UPDATE projects SET title=?, slug=?, location=?, category=?, property_type=?, area=?, year=?, style=?, scope=?, short_desc=?, about_title=?, about_subtitle=?, long_desc=?, meta_title=?, meta_keywords=?, meta_description=? WHERE id=?");
+        if (!empty($cover_image_path)) {
+            $stmt = $conn->prepare("UPDATE projects SET title=?, slug=?, location=?, category=?, property_type=?, area=?, year=?, style=?, scope=?, short_desc=?, about_title=?, about_subtitle=?, long_desc=?, meta_title=?, meta_keywords=?, meta_description=?, cover_image=?, gallery_categories_selected=? WHERE id=?");
+            if ($stmt) {
+                $stmt->bind_param("ssssssssssssssssssi", $title, $slug, $location, $category, $property_type, $area, $year, $style, $scope, $short_desc, $about_title, $about_subtitle, $long_desc, $meta_title, $meta_keywords, $meta_description, $cover_image_path, $gallery_categories_selected, $project_id);
+            }
+        } else {
+            $stmt = $conn->prepare("UPDATE projects SET title=?, slug=?, location=?, category=?, property_type=?, area=?, year=?, style=?, scope=?, short_desc=?, about_title=?, about_subtitle=?, long_desc=?, meta_title=?, meta_keywords=?, meta_description=?, gallery_categories_selected=? WHERE id=?");
+            if ($stmt) {
+                $stmt->bind_param("sssssssssssssssssi", $title, $slug, $location, $category, $property_type, $area, $year, $style, $scope, $short_desc, $about_title, $about_subtitle, $long_desc, $meta_title, $meta_keywords, $meta_description, $gallery_categories_selected, $project_id);
+            }
+        }
+        
         if ($stmt) {
-            $stmt->bind_param("ssssssssssssssssi", $title, $slug, $location, $category, $property_type, $area, $year, $style, $scope, $short_desc, $about_title, $about_subtitle, $long_desc, $meta_title, $meta_keywords, $meta_description, $project_id);
             if ($stmt->execute()) {
-                $success_msg = "Project updated successfully!";
+                // Save Gallery
+                saveProjectGallery($conn, $project_id, $_POST['gallery_images'] ?? [], $_POST['gallery_categories'] ?? []);
+                
+                header("Location: projects.php?success=edit");
+                exit;
             } else {
                 $error_msg = "Database error: " . $stmt->error;
             }
@@ -198,17 +238,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['ajax_action'])) {
         }
     } else {
         // INSERT new project
-        $stmt = $conn->prepare("INSERT INTO projects (title, slug, location, category, property_type, area, year, style, scope, short_desc, about_title, about_subtitle, long_desc, meta_title, meta_keywords, meta_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO projects (title, slug, location, category, property_type, area, year, style, scope, short_desc, about_title, about_subtitle, long_desc, meta_title, meta_keywords, meta_description, cover_image, gallery_categories_selected) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         if ($stmt) {
-            $stmt->bind_param("ssssssssssssssss", $title, $slug, $location, $category, $property_type, $area, $year, $style, $scope, $short_desc, $about_title, $about_subtitle, $long_desc, $meta_title, $meta_keywords, $meta_description);
+            $stmt->bind_param("ssssssssssssssssss", $title, $slug, $location, $category, $property_type, $area, $year, $style, $scope, $short_desc, $about_title, $about_subtitle, $long_desc, $meta_title, $meta_keywords, $meta_description, $cover_image_path, $gallery_categories_selected);
             if ($stmt->execute()) {
-                $success_msg = "Project added successfully!";
+                $new_id = $stmt->insert_id;
+                // Save Gallery
+                saveProjectGallery($conn, $new_id, $_POST['gallery_images'] ?? [], $_POST['gallery_categories'] ?? []);
+                
+                header("Location: projects.php?success=add");
+                exit;
             } else {
                 $error_msg = "Database error: " . $stmt->error;
             }
             $stmt->close();
         } else {
             $error_msg = "Database error: " . $conn->error;
+        }
+    }
+}
+
+function saveProjectGallery($conn, $project_id, $images, $categories) {
+    // Delete existing gallery for full replacement
+    $del = $conn->prepare("DELETE FROM project_gallery WHERE project_id = ?");
+    $del->bind_param("i", $project_id);
+    $del->execute();
+    
+    if (empty($images)) return;
+    
+    $upload_dir = '../assets/img/projects/gallery/';
+    if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+    
+    $order = 0;
+    foreach ($images as $index => $img_data) {
+        $cat = $categories[$index] ?? 'Living Room';
+        $final_path = '';
+        
+        if (strpos($img_data, 'data:image') === 0) {
+            // It's a base64 image
+            list($type, $img_data) = explode(';', $img_data);
+            list(, $img_data)      = explode(',', $img_data);
+            $img_data = base64_decode($img_data);
+            
+            $ext = 'jpg';
+            if (strpos($type, 'png') !== false) $ext = 'png';
+            if (strpos($type, 'webp') !== false) $ext = 'webp';
+            if (strpos($type, 'gif') !== false) $ext = 'gif';
+            
+            $filename = uniqid('gal_') . '.' . $ext;
+            if (file_put_contents($upload_dir . $filename, $img_data)) {
+                $final_path = '/assets/img/projects/gallery/' . $filename;
+            }
+        } else {
+            // Existing URL
+            // Ensure path starts with /
+            if (strpos($img_data, 'http') !== 0) {
+                // If it's a relative path starting with ../ or assets/, normalize it
+                $img_data = '/' . ltrim(str_replace('../', '', $img_data), '/');
+            }
+            $final_path = $img_data;
+        }
+        
+        if (!empty($final_path)) {
+            $ins = $conn->prepare("INSERT INTO project_gallery (project_id, category, image_path, display_order) VALUES (?, ?, ?, ?)");
+            $ins->bind_param("issi", $project_id, $cat, $final_path, $order);
+            $ins->execute();
+            $order++;
         }
     }
 }
@@ -282,7 +377,11 @@ include 'includes/sidebar.php';
                             <tr>
                                 <td>
                                     <div class="project-item">
-                                        <img src="<?php echo !empty($proj['cover_image']) ? htmlspecialchars($proj['cover_image']) : 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=100&h=80&fit=crop'; ?>" class="project-thumb" alt="Project">
+                                        <img src="<?php 
+                                            $img_src = !empty($proj['cover_image']) ? htmlspecialchars($proj['cover_image']) : 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=100&h=80&fit=crop';
+                                            if (strpos($img_src, '/') === 0) { $img_src = '..' . $img_src; }
+                                            echo $img_src;
+                                        ?>" class="project-thumb" alt="Project">
                                         <div class="user-details">
                                             <h4><?php echo htmlspecialchars($proj['title'] ?: 'Untitled Project'); ?></h4>
                                         </div>
@@ -293,7 +392,10 @@ include 'includes/sidebar.php';
                                 <td>
                                     <div class="action-btns">
                                         <a href="#" class="btn-icon" onclick="editProject(<?php echo $proj['id']; ?>); return false;"><i class="fa-solid fa-pen"></i></a>
-                                        <a href="?delete_id=<?php echo $proj['id']; ?>" class="btn-icon delete" onclick="return confirm('Are you sure you want to delete this project?');"><i class="fa-solid fa-trash"></i></a>
+                                        <form method="POST" action="projects.php" style="display:inline;" onsubmit="event.preventDefault(); openDeleteProjectModal(this);">
+                                            <input type="hidden" name="delete_id" value="<?php echo $proj['id']; ?>">
+                                            <button type="submit" class="btn-icon delete" style="border:none;background:none;cursor:pointer;padding:0;margin:0;"><i class="fa-solid fa-trash"></i></button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -426,6 +528,22 @@ include 'includes/sidebar.php';
                         .category-selector label:active {
                             cursor: grabbing;
                         }
+                        
+                        /* Gallery Multi-select Styles */
+                        .gallery-cat input[type="checkbox"] {
+                            position: absolute;
+                            opacity: 0;
+                            width: 0;
+                            height: 0;
+                        }
+                        .gallery-cat input[type="checkbox"]:checked ~ .gallery-tag-span {
+                            background-color: var(--primary-color) !important;
+                            color: white !important;
+                            border-color: var(--primary-color) !important;
+                        }
+                        .gallery-cat input[type="checkbox"]:checked ~ .gallery-tag-span .cat-icon {
+                            color: white !important;
+                        }
                     </style>
                     
                     <div class="category-selector" id="cat-selector-container">
@@ -485,15 +603,22 @@ include 'includes/sidebar.php';
                     <label style="margin-bottom: 10px; display: block; font-weight: 600; font-size: 14px; color: var(--text-dark); margin-top: 20px;">Gallery Categories (For Filter Buttons)</label>
                     <div class="category-selector" id="gallery-cat-selector-container">
                         <?php 
+                        $selected_gallery_cats = [];
+                        if (!empty($project['gallery_categories_selected'])) {
+                            $selected_gallery_cats = explode(',', $project['gallery_categories_selected']);
+                        }
                         if ($gallery_categories && $gallery_categories->num_rows > 0): 
                             while($cat = $gallery_categories->fetch_assoc()):
+                                $cat_name = htmlspecialchars($cat['name']);
+                                $is_checked = in_array($cat['name'], $selected_gallery_cats) ? 'checked' : '';
                         ?>
-                        <label data-catname="<?php echo htmlspecialchars($cat['name']); ?>" class="gallery-cat draggable-gallery-cat" draggable="true" style="cursor: grab;">
-                            <span class="tag-span" style="background-color: white; font-weight: normal; border-color: rgba(0,0,0,0.1); color: var(--text-dark);">
+                        <label data-catname="<?php echo $cat_name; ?>" class="gallery-cat draggable-gallery-cat" draggable="true" style="cursor: grab; position: relative;">
+                            <input type="checkbox" name="gallery_categories_selected[]" value="<?php echo $cat_name; ?>" <?php echo $is_checked; ?>>
+                            <span class="tag-span gallery-tag-span" style="background-color: white; font-weight: normal; border-color: rgba(0,0,0,0.1); color: var(--text-dark); transition: all 0.2s ease;">
                                 <?php if(!empty($cat['icon'])): ?><i class="cat-icon <?php echo htmlspecialchars($cat['icon']); ?>" style="color: var(--text-muted); margin-right: 8px;"></i><?php endif; ?>
-                                <?php echo htmlspecialchars($cat['name']); ?>
+                                <?php echo $cat_name; ?>
                             </span>
-                            <button type="button" class="del-cat-btn" onclick="deleteInlineGalleryCategory('<?php echo htmlspecialchars(addslashes($cat['name'])); ?>')"><i class="fa-solid fa-xmark"></i></button>
+                            <button type="button" class="del-cat-btn" onclick="event.preventDefault(); deleteInlineGalleryCategory('<?php echo htmlspecialchars(addslashes($cat['name'])); ?>')" style="position: relative; z-index: 2;"><i class="fa-solid fa-xmark"></i></button>
                         </label>
                         <?php 
                             endwhile;
@@ -1088,7 +1213,35 @@ include 'includes/sidebar.php';
     </div>
 </div>
 
+<!-- Custom Delete Project Modal -->
+<div id="delete-project-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 25px; border-radius: 10px; width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center;">
+        <div style="font-size: 40px; color: #ef4444; margin-bottom: 15px;"><i class="fa-solid fa-circle-exclamation"></i></div>
+        <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 18px; color: #333;">Delete Project</h3>
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Are you sure you want to delete this project? This action cannot be undone.</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button type="button" onclick="closeDeleteProjectModal()" style="padding: 8px 15px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; color: #555;">Cancel</button>
+            <button type="button" id="confirm-delete-project-btn" style="padding: 8px 15px; border: none; background: #ef4444; color: white; border-radius: 6px; cursor: pointer;">Delete</button>
+        </div>
+    </div>
+</div>
+
 <script>
+let projectFormToSubmit = null;
+function openDeleteProjectModal(formElement) {
+    projectFormToSubmit = formElement;
+    document.getElementById('delete-project-modal').style.display = 'flex';
+}
+function closeDeleteProjectModal() {
+    document.getElementById('delete-project-modal').style.display = 'none';
+    projectFormToSubmit = null;
+}
+document.getElementById('confirm-delete-project-btn').addEventListener('click', function() {
+    if(projectFormToSubmit) {
+        projectFormToSubmit.submit();
+    }
+});
+
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -1191,6 +1344,37 @@ function saveLiveProject() {
     // For Top Features and Highlights, we can capture them dynamically and add to form, 
     // but for MVP we are just submitting the main form.
     
+    // Extract gallery images
+    const galleryItems = doc.querySelectorAll('.gallery-item');
+    const form = document.getElementById('live-add-form');
+    // Clear previous if any
+    form.querySelectorAll('.gallery-hidden-input').forEach(e => e.remove());
+    
+    galleryItems.forEach((item, index) => {
+        const img = item.querySelector('img');
+        if (img) {
+            const cat = item.getAttribute('data-category') || 'Living Room';
+            const src = img.getAttribute('src') || '';
+            
+            // Only add if it's an actual image, not a placeholder
+            if (src && !src.includes('placeholder')) {
+                const inputSrc = document.createElement('input');
+                inputSrc.type = 'hidden';
+                inputSrc.name = `gallery_images[${index}]`;
+                inputSrc.value = src;
+                inputSrc.className = 'gallery-hidden-input';
+                form.appendChild(inputSrc);
+                
+                const inputCat = document.createElement('input');
+                inputCat.type = 'hidden';
+                inputCat.name = `gallery_categories[${index}]`;
+                inputCat.value = cat;
+                inputCat.className = 'gallery-hidden-input';
+                form.appendChild(inputCat);
+            }
+        }
+    });
+
     document.getElementById('btn-save-project').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
     
     // Submit the form

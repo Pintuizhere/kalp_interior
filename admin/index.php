@@ -325,7 +325,7 @@ include 'includes/sidebar.php';
                         <div class="project-item">
                             <?php 
                             if(!empty($proj['cover_image'])) {
-                                $img_src = strpos($proj['cover_image'], 'http') === 0 ? $proj['cover_image'] : '../' . $proj['cover_image'];
+                                $img_src = strpos($proj['cover_image'], 'http') === 0 ? $proj['cover_image'] : '../' . ltrim($proj['cover_image'], '/');
                             } else {
                                 $img_src = 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=100&h=80&fit=crop';
                             }

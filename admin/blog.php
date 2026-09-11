@@ -8,6 +8,8 @@ $error_msg = '';
 
 if (isset($_GET['success'])) {
     if ($_GET['success'] == 'delete') $success_msg = "Blog post deleted successfully!";
+    if ($_GET['success'] == 'insert') $success_msg = "Blog post published successfully!";
+    if ($_GET['success'] == 'update') $success_msg = "Blog post updated successfully!";
 }
 
 // Handle Delete

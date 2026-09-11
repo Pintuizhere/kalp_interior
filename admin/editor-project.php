@@ -34,7 +34,7 @@ $scope = $project['scope'] ?? 'Full Interior Design';
 $about_title = $project['about_title'] ?? 'Crafted for Comfort.';
 $about_subtitle = $project['about_subtitle'] ?? 'Designed for Living.';
 $long_desc = $project['long_desc'] ?? '<p style="color: #666; line-height: 1.8; margin-bottom: 20px;">This modern 4 BHK apartment is designed for a young family seeking a balance between style and functionality.</p><p style="color: #666; line-height: 1.8; margin-bottom: 20px;">The interiors feature a neutral palette, clean lines, and custom elements that create a calm and cohesive environment.</p><p style="color: #666; line-height: 1.8;">From the spacious living area to the cozy bedrooms, each space is crafted to enhance everyday living.</p>';
-$cover_image = !empty($project['cover_image']) ? '../' . $project['cover_image'] : 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80';
+$cover_image = !empty($project['cover_image']) ? ltrim($project['cover_image'], '/') : 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80';
 ?>
 <style>
     /* Force include frontend CSS since relative path in header fails in admin folder */
@@ -264,13 +264,20 @@ $cover_image = !empty($project['cover_image']) ? '../' . $project['cover_image']
                     <div class="gallery-filters" style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button class="gallery-filter-btn active" style="background: var(--primary-color); color: white; border: 1px solid var(--primary-color); padding: 8px 20px; border-radius: 8px; font-size: 14px; cursor: pointer;"><i class="fa-solid fa-layer-group" style="margin-right: 5px;"></i> All</button>
                         <?php 
+                        $selected_gallery_cats = [];
+                        if (!empty($project['gallery_categories_selected'])) {
+                            $selected_gallery_cats = explode(',', $project['gallery_categories_selected']);
+                        }
+
                         if ($gallery_categories && $gallery_categories->num_rows > 0): 
                             while($cat = $gallery_categories->fetch_assoc()):
+                                if (empty($selected_gallery_cats) || in_array($cat['name'], $selected_gallery_cats)):
                         ?>
                         <button class="gallery-filter-btn" style="background: white; color: var(--text-dark); border: 1px solid rgba(0,0,0,0.15); padding: 8px 20px; border-radius: 8px; font-size: 14px; cursor: pointer;">
                             <?php if(!empty($cat['icon'])): ?><i class="<?php echo htmlspecialchars($cat['icon']); ?>" style="margin-right: 5px;"></i><?php endif; ?> <?php echo htmlspecialchars($cat['name']); ?>
                         </button>
                         <?php 
+                                endif;
                             endwhile;
                             $gallery_categories->data_seek(0);
                         endif; 
@@ -279,35 +286,63 @@ $cover_image = !empty($project['cover_image']) ? '../' . $project['cover_image']
                 </div>
 
                 <div class="masonry-gallery-grid" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px;">
+                    <?php
+                    $has_gallery = false;
+                    $p_id = $project['id'] ?? null;
+                    if (!empty($p_id)) {
+                        $gal_query = "SELECT * FROM project_gallery WHERE project_id = $p_id ORDER BY display_order ASC";
+                        $gal_res = $conn->query($gal_query);
+                        if ($gal_res && $gal_res->num_rows > 0) {
+                            $has_gallery = true;
+                            $g_index = 0;
+                            while($g = $gal_res->fetch_assoc()) {
+                                $img_src = ltrim($g['image_path'], '/');
+                                // Assign columns based on index for masonry effect
+                                $col_span = 3; $height = '260px';
+                                if ($g_index == 0) { $col_span = 7; $height = '450px'; }
+                                else if ($g_index == 1) { $col_span = 5; $height = '450px'; }
+                                
+                                echo '<div class="gallery-item item-small deletable-wrapper" data-category="'.htmlspecialchars($g['category']).'" style="grid-column: span '.$col_span.'; position: relative; border-radius: 12px; overflow: hidden; height: '.$height.';">';
+                                echo '<img src="'.htmlspecialchars($img_src).'" alt="Gallery Image" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">';
+                                echo '<div class="image-edit-overlay"><div style="width:50px;height:50px;background:var(--accent-color);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;"><i class="fa-solid fa-camera"></i></div></div>';
+                                echo '</div>';
+                                $g_index++;
+                            }
+                        }
+                    }
+                    
+                    if (!$has_gallery):
+                    ?>
                     <!-- Top Left Image (spans 7 columns) -->
-                    <div class="gallery-item item-large" data-category="Living Room" style="grid-column: span 7; position: relative; border-radius: 12px; overflow: hidden; height: 450px;">
-                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80" alt="Living Room" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
+                    <div class="gallery-item item-large deletable-wrapper" data-category="Living Room" style="grid-column: span 7; position: relative; border-radius: 12px; overflow: hidden; height: 450px;">
+                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80" alt="Living Room placeholder" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
                         <div class="image-edit-overlay"><div style="width:50px;height:50px;background:var(--accent-color);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;"><i class="fa-solid fa-camera"></i></div></div>
                     </div>
                     
                     <!-- Top Right Image (spans 5 columns) -->
-                    <div class="gallery-item item-medium" data-category="Dining" style="grid-column: span 5; position: relative; border-radius: 12px; overflow: hidden; height: 450px;">
-                        <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&q=80" alt="Dining Room" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
+                    <div class="gallery-item item-medium deletable-wrapper" data-category="Dining" style="grid-column: span 5; position: relative; border-radius: 12px; overflow: hidden; height: 450px;">
+                        <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&q=80" alt="Dining Room placeholder" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
                         <div class="image-edit-overlay"><div style="width:50px;height:50px;background:var(--accent-color);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;"><i class="fa-solid fa-camera"></i></div></div>
                     </div>
                     
                     <!-- Bottom Row: 4 images (span 3 columns each) -->
-                    <div class="gallery-item item-small" data-category="Kitchen" style="grid-column: span 3; position: relative; border-radius: 12px; overflow: hidden; height: 260px;">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Kitchen" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
+                    <div class="gallery-item item-small deletable-wrapper" data-category="Kitchen" style="grid-column: span 3; position: relative; border-radius: 12px; overflow: hidden; height: 260px;">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Kitchen placeholder" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
                         <div class="image-edit-overlay"><div style="width:50px;height:50px;background:var(--accent-color);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;"><i class="fa-solid fa-camera"></i></div></div>
                     </div>
-                    <div class="gallery-item item-small" data-category="Bedroom" style="grid-column: span 3; position: relative; border-radius: 12px; overflow: hidden; height: 260px;">
-                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80" alt="Bedroom" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
+                    <div class="gallery-item item-small deletable-wrapper" data-category="Bedroom" style="grid-column: span 3; position: relative; border-radius: 12px; overflow: hidden; height: 260px;">
+                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80" alt="Bedroom placeholder" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
                         <div class="image-edit-overlay"><div style="width:50px;height:50px;background:var(--accent-color);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;"><i class="fa-solid fa-camera"></i></div></div>
                     </div>
-                    <div class="gallery-item item-small" data-category="Bathroom" style="grid-column: span 3; position: relative; border-radius: 12px; overflow: hidden; height: 260px;">
-                        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&q=80" alt="Bathroom" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
+                    <div class="gallery-item item-small deletable-wrapper" data-category="Bathroom" style="grid-column: span 3; position: relative; border-radius: 12px; overflow: hidden; height: 260px;">
+                        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&q=80" alt="Bathroom placeholder" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
                         <div class="image-edit-overlay"><div style="width:50px;height:50px;background:var(--accent-color);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;"><i class="fa-solid fa-camera"></i></div></div>
                     </div>
-                    <div class="gallery-item item-small" data-category="Other Spaces" style="grid-column: span 3; position: relative; border-radius: 12px; overflow: hidden; height: 260px;">
-                        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&q=80" alt="Balcony" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
+                    <div class="gallery-item item-small deletable-wrapper" data-category="Other Spaces" style="grid-column: span 3; position: relative; border-radius: 12px; overflow: hidden; height: 260px;">
+                        <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&q=80" alt="Balcony placeholder" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease;">
                         <div class="image-edit-overlay"><div style="width:50px;height:50px;background:var(--accent-color);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;"><i class="fa-solid fa-camera"></i></div></div>
                     </div>
+                    <?php endif; ?>
                     
                     <!-- Add Image Card -->
                     <div id="add-image-card" class="item-small" style="grid-column: span 3; border-radius: 12px; height: 260px; border: 2px dashed rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: #888; background: #f8f9fa; transition: all 0.3s ease;">
