@@ -11,6 +11,11 @@ if (!isset($_SESSION['admin_logged_in'])) {
 $success_msg = '';
 $error_msg = '';
 
+if (isset($_GET['success'])) {
+    if ($_GET['success'] == 'upload') $success_msg = "Logo uploaded successfully!";
+    if ($_GET['success'] == 'delete') $success_msg = "Logo deleted successfully!";
+}
+
 // Handle Image Upload
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_logo'])) {
     $stripe_type = $conn->real_escape_string($_POST['stripe_type']);
@@ -35,7 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_logo'])) {
             $db_path = 'assets/images/stripes/' . $new_filename;
             $sql = "INSERT INTO stripe_logos (stripe_type, image_path, alt_text) VALUES ('$stripe_type', '$db_path', '$alt_text')";
             if ($conn->query($sql) === TRUE) {
-                $success_msg = "Logo uploaded and cropped successfully!";
+                header("Location: stripe_logos.php?success=upload");
+                exit();
             } else {
                 $error_msg = "Database Error: " . $conn->error;
             }
@@ -55,7 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_logo'])) {
                 $db_path = 'assets/images/stripes/' . $new_filename;
                 $sql = "INSERT INTO stripe_logos (stripe_type, image_path, alt_text) VALUES ('$stripe_type', '$db_path', '$alt_text')";
                 if ($conn->query($sql) === TRUE) {
-                    $success_msg = "Logo uploaded successfully!";
+                    header("Location: stripe_logos.php?success=upload");
+                    exit();
                 } else {
                     $error_msg = "Database Error: " . $conn->error;
                 }
@@ -85,7 +92,8 @@ if (isset($_GET['delete_id'])) {
         
         // Delete from DB
         if ($conn->query("DELETE FROM stripe_logos WHERE id = $delete_id")) {
-            $success_msg = "Logo deleted successfully!";
+            header("Location: stripe_logos.php?success=delete");
+            exit();
         } else {
             $error_msg = "Failed to delete from database.";
         }
