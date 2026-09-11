@@ -12,4 +12,8 @@ if ($conn->connect_error) {
 
 // Optional: Set UTF-8 charset
 $conn->set_charset("utf8");
+
+// Set default timezone to India Standard Time for both PHP and MySQL
+date_default_timezone_set('Asia/Kolkata');
+$conn->query("SET time_zone = '+05:30'");
 ?>
