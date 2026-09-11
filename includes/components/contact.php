@@ -46,7 +46,12 @@ $g_in = !empty($global_settings['social_linkedin']) ? $global_settings['social_l
                     </div>
                 <?php endif; ?>
                 
-                <form class="contact-form" action="process_contact.php" method="POST">
+                <?php
+                // Detect if running on localhost to keep the .php extension, otherwise remove it for live hostinger servers to prevent 301 redirects dropping POST data
+                $is_localhost = isset($_SERVER['HTTP_HOST']) && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false);
+                $form_action = $is_localhost ? 'process_contact.php' : 'process_contact';
+                ?>
+                <form class="contact-form" action="<?php echo $form_action; ?>" method="POST">
                     <div class="form-row">
                         <div class="form-group">
                             <label>Your Name *</label>
