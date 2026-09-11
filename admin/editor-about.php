@@ -235,6 +235,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Map classes to database keys
     const textMappings = {
+        '.about-main-heading': 'main_heading',
+        '.about-sub-heading': 'sub_heading',
+        '.about-main-text': 'main_text',
         '.about-intro-award': 'about_intro_award_title',
         '.about-stat1-val': 'about_intro_stat1_value',
         '.about-stat1-label': 'about_intro_stat1_label',
