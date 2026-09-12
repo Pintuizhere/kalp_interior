@@ -51,16 +51,28 @@ if (isset($_GET['delete'])) {
     if ($delete_id == $current_user_id) {
         $error_msg = "You cannot delete your own active account.";
     } else {
-        $stmt = $conn->prepare("DELETE FROM admin_users WHERE id = ?");
-        $stmt->bind_param("i", $delete_id);
+        // Prevent deleting the primary super admin
+        $check_stmt = $conn->prepare("SELECT email FROM admin_users WHERE id = ?");
+        $check_stmt->bind_param("i", $delete_id);
+        $check_stmt->execute();
+        $check_res = $check_stmt->get_result();
+        $user_to_delete = $check_res->fetch_assoc();
         
-        if ($stmt->execute()) {
-            header("Location: users.php?success=delete");
-            exit;
+        if ($user_to_delete && $user_to_delete['email'] === 'admin@kalpinterior.com') {
+            $error_msg = "You cannot delete the permanent primary super admin account.";
         } else {
-            $error_msg = "Error deleting user.";
+            $stmt = $conn->prepare("DELETE FROM admin_users WHERE id = ?");
+            $stmt->bind_param("i", $delete_id);
+            
+            if ($stmt->execute()) {
+                header("Location: users.php?success=delete");
+                exit;
+            } else {
+                $error_msg = "Error deleting user.";
+            }
+            $stmt->close();
         }
-        $stmt->close();
+        $check_stmt->close();
     }
 }
 
@@ -286,7 +298,7 @@ include 'includes/sidebar.php';
                                 <td><span class="sa-role-pill"><?php echo $roleName; ?></span></td>
                                 <td><span class="sa-status-dot"><?php echo $status; ?></span></td>
                                 <td>
-                                    <?php if(!$is_current): ?>
+                                    <?php if(!$is_current && $row['email'] !== 'admin@kalpinterior.com'): ?>
                                         <a href="?delete=<?php echo $row['id']; ?>" class="action-btn delete" style="color: #94a3b8; background: transparent; padding: 5px; font-size: 16px;">
                                             <i class="fa-solid fa-key"></i>
                                         </a>

@@ -989,7 +989,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                     const checkedAddons = document.querySelectorAll('input[name="addons"]:checked');
                                     if (checkedAddons) {
                                         checkedAddons.forEach(addon => {
-                                            addonsCost += baseCost * (parseInt(addon.value || 0) / 100);
+                                            const val = parseFloat(addon.value || 0);
+                                            const valType = addon.getAttribute('data-type') || 'percent';
+                                            addonsCost += valType === 'percent' ? baseCost * (val / 100) : val;
                                         });
                                     }
                                     const totalCost = Math.round(subtotal + addonsCost);
@@ -1007,7 +1009,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                                     if (checkedAddons) {
                                         checkedAddons.forEach(addon => {
-                                            computedCosts['addon-' + addon.value] = Math.round(baseCost * (parseInt(addon.value || 0) / 100));
+                                            const val = parseFloat(addon.value || 0);
+                                            const id = addon.getAttribute('data-id');
+                                            const valType = addon.getAttribute('data-type') || 'percent';
+                                            computedCosts['addon-' + id] = Math.round(valType === 'percent' ? baseCost * (val / 100) : val);
                                         });
                                     }
                                 }
@@ -1053,15 +1058,16 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
 
                                 // Save addons that might be in the list
-                                const addonIds = ['8', '10', '4'];
                                 let addonsHtml = '';
-                                addonIds.forEach(id => {
+                                const checkedAddonsPdf = document.querySelectorAll('input[name="addons"]:checked');
+                                checkedAddonsPdf.forEach(addon => {
+                                    const id = addon.getAttribute('data-id');
                                     const row = document.getElementById('li-addon-' + id);
-                                    if (row && (row.style.display !== 'none' || (computedCosts && computedCosts['addon-' + id]))) {
+                                    if (row && (row.style.display !== 'none' || (computedCosts && computedCosts['addon-' + id] !== undefined))) {
                                         const valEl = document.getElementById('bd-addon-' + id);
                                         const text = row.querySelector('span:first-child').innerText;
-                                        const cost = computedCosts ? formatNum(computedCosts['addon-' + id]) : (valEl ? valEl.textContent : '');
-                                        addonsHtml += `<tr><td style="padding: 5px 0; color: #a49375;">${text}</td><td style="padding: 5px 0; text-align: right; color: #a49375;">${cost}</td></tr>`;
+                                        const cost = (computedCosts && computedCosts['addon-' + id] !== undefined) ? formatNum(computedCosts['addon-' + id]) : (valEl ? valEl.textContent : '');
+                                        addonsHtml += `<tr><td style="padding: 5px 0; color: #F4B41A;">${text}</td><td style="padding: 5px 0; text-align: right; color: #F4B41A;">${cost}</td></tr>`;
                                     }
                                 });
 
