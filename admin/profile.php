@@ -378,12 +378,18 @@ $stmt->close();
                     
                     <div class="form-group" style="margin-bottom: 20px;">
                         <label>New Password</label>
-                        <input type="password" name="new_password" class="form-control" placeholder="••••••••" required>
+                        <div style="position: relative;">
+                            <input type="password" name="new_password" id="new_password" class="form-control" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye" onclick="togglePasswordVisibility('new_password', this)" style="position: absolute; right: 15px; top: 15px; color: #94a3b8; cursor: pointer;"></i>
+                        </div>
                     </div>
                     
                     <div class="form-group" style="margin-bottom: 30px;">
                         <label>Confirm New Password</label>
-                        <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+                        <div style="position: relative;">
+                            <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye" onclick="togglePasswordVisibility('confirm_password', this)" style="position: absolute; right: 15px; top: 15px; color: #94a3b8; cursor: pointer;"></i>
+                        </div>
                     </div>
                     
                     <div style="overflow: hidden;">
@@ -412,6 +418,19 @@ function switchTab(tabId, element) {
     
     // Add active class to clicked tab link
     element.classList.add('active');
+}
+
+function togglePasswordVisibility(inputId, iconElement) {
+    const pwdInput = document.getElementById(inputId);
+    if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        iconElement.classList.remove('fa-eye');
+        iconElement.classList.add('fa-eye-slash');
+    } else {
+        pwdInput.type = 'password';
+        iconElement.classList.remove('fa-eye-slash');
+        iconElement.classList.add('fa-eye');
+    }
 }
 </script>
 

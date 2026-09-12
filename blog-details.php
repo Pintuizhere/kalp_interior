@@ -352,8 +352,8 @@ if($categories_result && $categories_result->num_rows > 0) {
                 ?>
                 <div class="blog-card">
                     <div class="blog-img-wrapper">
-                        <a href="blog-details.php?slug=<?php echo urlencode($rel_blog['slug']); ?>" style="display: block; height: 100%;">
-                            <img src="<?php echo $rel_image; ?>" alt="<?php echo htmlspecialchars($rel_blog['title']); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                        <a href="blog-details.php?slug=<?php echo urlencode($rel_blog['slug']); ?>" style="display: block;">
+                            <img src="<?php echo $rel_image; ?>" alt="<?php echo htmlspecialchars($rel_blog['title']); ?>" style="width: 100%; height: 250px; object-fit: cover;">
                         </a>
                         <div class="blog-tags">
                             <span><?php echo $rel_date; ?></span>
